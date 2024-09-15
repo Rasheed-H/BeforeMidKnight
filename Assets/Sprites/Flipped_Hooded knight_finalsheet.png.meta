@@ -1,0 +1,679 @@
+fileFormatVersion: 2
+guid: 22e95d2688291784a800d5c44a28ea84
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: runLeft10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7a8a304a6e3d2045802cf84427491ca
+      internalID: 380796541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: runLeft9
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 884e286ad0036a54280a7851af2d4b9c
+      internalID: 1855896381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: runLeft8
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3cb9ec2e0d294e341b4770267ee2d582
+      internalID: -712875563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: runLeft7
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f91e506b0ec6ab4db298af5dd14ce19
+      internalID: -1238862373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: runLeft6
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d0e04f3883a35d4d84f37f85dd7cd4e
+      internalID: -2002226718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: runLeft5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f23c8d204cb093f41a15908583e7ae71
+      internalID: 2140070186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: runLeft4
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 193ad05dc839d3444acc5a4433974559
+      internalID: -1647011754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: runLeft3
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1c1fdcca8e76e44e83ca483f6ba78be
+      internalID: 223614853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: runLeft2
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55da2c25974d5c74aa9711590974c8d8
+      internalID: 976974378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: runLeft1
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a4773d09aab71643ba2f6c16f6a8438
+      internalID: 2137727486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idleLeft3
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7fd1ae8ba37c84943af0fb3b02e11fb9
+      internalID: -1825320730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idleLeft2
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da742f123bc5074439bbed3c9572c633
+      internalID: 450723700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idleLeft1
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da7c1fee514801947b88911a5a9f76ff
+      internalID: -1815962758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: attackLeft9
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0245f6f5f76228e4bb380785d3134dd2
+      internalID: -447108747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: attackLeft8
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 230dff521834b83458162f42e19e438d
+      internalID: 959986972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: attackLeft7
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c949cb98f10b664aa73de7f1e76f254
+      internalID: -1683959509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: attackLeft6
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 02030907556e3af4389275e2f8e3e4dc
+      internalID: 1191304517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: attackLeft5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a98995a2f2735e4db6419e40de67380
+      internalID: -418461829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: attackLeft4
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a67c7c6e9c58ad240b633ef1d3329882
+      internalID: -1255048018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: attackLeft3
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9225de14a8bb85446aec69cdd8710594
+      internalID: 1574374204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: attackLeft2
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8504bee4b085b034782870d0237fbaf4
+      internalID: -1603652190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: attackLeft1
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ae5ca0f803ed2a9488494a8926484900
+      internalID: -952423720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Flipped_Hooded knight_finalsheet_0: 543345689
+      Flipped_Hooded knight_finalsheet_1: -1296633657
+      Flipped_Hooded knight_finalsheet_10: -27921713
+      Flipped_Hooded knight_finalsheet_11: -78181643
+      Flipped_Hooded knight_finalsheet_12: -1296388485
+      Flipped_Hooded knight_finalsheet_13: -841450765
+      Flipped_Hooded knight_finalsheet_14: 1345360250
+      Flipped_Hooded knight_finalsheet_15: -1984637603
+      Flipped_Hooded knight_finalsheet_16: 1294056532
+      Flipped_Hooded knight_finalsheet_17: 556224499
+      Flipped_Hooded knight_finalsheet_18: -1271889936
+      Flipped_Hooded knight_finalsheet_19: 1043272052
+      Flipped_Hooded knight_finalsheet_2: 632446793
+      Flipped_Hooded knight_finalsheet_20: 799938982
+      Flipped_Hooded knight_finalsheet_21: -1711732040
+      Flipped_Hooded knight_finalsheet_22: -2098725943
+      Flipped_Hooded knight_finalsheet_23: 25049446
+      Flipped_Hooded knight_finalsheet_24: 405127399
+      Flipped_Hooded knight_finalsheet_25: -113848752
+      Flipped_Hooded knight_finalsheet_26: 66626003
+      Flipped_Hooded knight_finalsheet_27: 1254544659
+      Flipped_Hooded knight_finalsheet_28: 1885780348
+      Flipped_Hooded knight_finalsheet_29: -1368365322
+      Flipped_Hooded knight_finalsheet_3: 1034678455
+      Flipped_Hooded knight_finalsheet_30: -1552000578
+      Flipped_Hooded knight_finalsheet_31: -1972740294
+      Flipped_Hooded knight_finalsheet_32: 1730578428
+      Flipped_Hooded knight_finalsheet_33: -501132263
+      Flipped_Hooded knight_finalsheet_34: 131850139
+      Flipped_Hooded knight_finalsheet_35: 998302753
+      Flipped_Hooded knight_finalsheet_36: -703013792
+      Flipped_Hooded knight_finalsheet_4: -1770043108
+      Flipped_Hooded knight_finalsheet_46: -1123488323
+      Flipped_Hooded knight_finalsheet_47: 1824787661
+      Flipped_Hooded knight_finalsheet_48: -1369572043
+      Flipped_Hooded knight_finalsheet_49: -1032554954
+      Flipped_Hooded knight_finalsheet_5: 252280903
+      Flipped_Hooded knight_finalsheet_50: -575061994
+      Flipped_Hooded knight_finalsheet_51: 697049134
+      Flipped_Hooded knight_finalsheet_52: -58837964
+      Flipped_Hooded knight_finalsheet_53: -275022691
+      Flipped_Hooded knight_finalsheet_54: -1198509529
+      Flipped_Hooded knight_finalsheet_55: -762290352
+      Flipped_Hooded knight_finalsheet_56: 1646043397
+      Flipped_Hooded knight_finalsheet_57: -575716462
+      Flipped_Hooded knight_finalsheet_58: 298588395
+      Flipped_Hooded knight_finalsheet_59: -1617805708
+      Flipped_Hooded knight_finalsheet_6: 1740292998
+      Flipped_Hooded knight_finalsheet_60: -895285502
+      Flipped_Hooded knight_finalsheet_61: -633943964
+      Flipped_Hooded knight_finalsheet_62: -309062095
+      Flipped_Hooded knight_finalsheet_63: -2077337448
+      Flipped_Hooded knight_finalsheet_64: 196793727
+      Flipped_Hooded knight_finalsheet_65: -1505894195
+      Flipped_Hooded knight_finalsheet_66: 86972280
+      Flipped_Hooded knight_finalsheet_67: 627338852
+      Flipped_Hooded knight_finalsheet_68: 388950064
+      Flipped_Hooded knight_finalsheet_69: 1088721139
+      Flipped_Hooded knight_finalsheet_7: 1490771714
+      Flipped_Hooded knight_finalsheet_70: 1252504210
+      Flipped_Hooded knight_finalsheet_71: 1420726693
+      Flipped_Hooded knight_finalsheet_72: 664308130
+      Flipped_Hooded knight_finalsheet_73: 681967774
+      Flipped_Hooded knight_finalsheet_74: 1272046507
+      Flipped_Hooded knight_finalsheet_75: -978540793
+      Flipped_Hooded knight_finalsheet_76: 261553752
+      Flipped_Hooded knight_finalsheet_8: 622892175
+      Flipped_Hooded knight_finalsheet_9: 1695745372
+      attackLeft1: -1834812469
+      attackLeft2: -1064515372
+      attackLeft3: -30527636
+      attackLeft4: -989563735
+      attackLeft5: -618745031
+      attackLeft6: 1474704273
+      attackLeft7: 821106921
+      attackLeft8: 1547805228
+      attackLeft9: 681886646
+      idleLeft1: -308401723
+      idleLeft2: -239120106
+      idleLeft3: -2077018957
+      runLeft1: 2137727486
+      runLeft10: 380796541
+      runLeft2: 976974378
+      runLeft3: 223614853
+      runLeft4: -1647011754
+      runLeft5: 2140070186
+      runLeft6: -2002226718
+      runLeft7: -1238862373
+      runLeft8: -712875563
+      runLeft9: 1855896381
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
