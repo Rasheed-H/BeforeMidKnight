@@ -8,17 +8,18 @@ TagManager:
   - Slash
   - Dagger
   - Dash
+  - Wall
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Enemy
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Wall
+  - Player
+  - Projectile
+  - AttackHitbox
   - 
   - 
   - 
@@ -44,4 +45,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Door
+    uniqueID: 2195239461
     locked: 0
