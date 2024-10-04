@@ -475,7 +475,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 1
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -925,9 +925,9 @@ MonoBehaviour:
   emptyRoomPrefab: {fileID: 1250098762128010751, guid: 9d4f97d5ab0e4524d83ff0680bb43450, type: 3}
   treasureRoomPrefab: {fileID: 1250098762128010751, guid: 1aceb64227adc7f478316ef41a75fca6, type: 3}
   endRoomPrefab: {fileID: 1250098762128010751, guid: 6286edab153e6df4ba40947cc23077b8, type: 3}
-  minIterations: 25
+  minIterations: 75
   maxIterations: 75
-  numberOfCrawlers: 1
+  numberOfCrawlers: 3
   treasureRoomChance: 0.05
   roomWidth: 18.5
   roomHeight: 10.5
@@ -1090,9 +1090,9 @@ MonoBehaviour:
   daggerProjectileSpeed: 10
   dashSpeed: 10
   dashDistance: 5
-  slashCooldown: 2
-  daggerCooldown: 1
-  dashCooldown: 3
+  slashCooldown: 1
+  daggerCooldown: 0.5
+  dashCooldown: 2.5
   AttackRightHitbox: {fileID: 495756543}
   AttackLeftHitbox: {fileID: 1410204001}
   AttackUpHitbox: {fileID: 1025876968}

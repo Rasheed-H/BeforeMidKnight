@@ -30,11 +30,13 @@ public class DungeonGenerator : MonoBehaviour
     /// </summary>
     private class Crawler
     {
-        public Vector2Int position; 
+        public Vector2Int position;       
+        public Vector2Int lastDirection;    
 
         public Crawler(Vector2Int startPos)
         {
             position = startPos;
+            lastDirection = Vector2Int.zero; 
         }
     }
 
@@ -53,11 +55,12 @@ public class DungeonGenerator : MonoBehaviour
     /// </summary>
     void GenerateDungeon()
     {
-        Vector2Int startPosition = Vector2Int.zero; 
-        SpawnRoom(startPosition, startRoomPrefab);  
-        List<Crawler> crawlers = new List<Crawler>();              
-        List<Vector2Int> allRoomPositions = new List<Vector2Int>(); 
-        allRoomPositions.Add(startPosition);                       
+        Vector2Int startPosition = Vector2Int.zero;
+        SpawnRoom(startPosition, startRoomPrefab);
+
+        List<Crawler> crawlers = new List<Crawler>();
+        List<Vector2Int> allRoomPositions = new List<Vector2Int>();
+        allRoomPositions.Add(startPosition);
 
         int totalIterations = Random.Range(minIterations, maxIterations + 1);
         int stepsPerCrawler = totalIterations / numberOfCrawlers;
@@ -68,21 +71,21 @@ public class DungeonGenerator : MonoBehaviour
             crawlers.Add(new Crawler(startPosition));
         }
 
-
         foreach (Crawler crawler in crawlers)
         {
             for (int step = 0; step < stepsPerCrawler; step++)
             {
-                Vector2Int direction = GetRandomDirection();         
-                Vector2Int newPosition = crawler.position + direction; 
+                Vector2Int direction = GetDirection(crawler.lastDirection);
+                Vector2Int newPosition = crawler.position + direction;
 
                 crawler.position = newPosition;
+                crawler.lastDirection = direction; // Update the last direction
 
                 if (!spawnedRooms.ContainsKey(newPosition))
                 {
-                    GameObject roomPrefab = GetRandomRoomPrefab(); 
-                    SpawnRoom(newPosition, roomPrefab);            
-                    allRoomPositions.Add(newPosition);             
+                    GameObject roomPrefab = GetRandomRoomPrefab();
+                    SpawnRoom(newPosition, roomPrefab);
+                    allRoomPositions.Add(newPosition);
                     lastRoomPosition = newPosition;
                 }
             }
@@ -111,18 +114,25 @@ public class DungeonGenerator : MonoBehaviour
     /// Returns a random direction (up, down, left, right) for the crawler to move in the grid.
     /// </summary>
     /// <returns>A Vector2Int representing the direction to move in the grid.</returns>
-    Vector2Int GetRandomDirection()
+    Vector2Int GetDirection(Vector2Int lastDirection)
     {
+        // List of possible directions
         List<Vector2Int> directions = new List<Vector2Int>
         {
-            Vector2Int.up,    // (0, 1)
-            Vector2Int.down,  // (0, -1)
-            Vector2Int.left,  // (-1, 0)
-            Vector2Int.right  // (1, 0)
+            Vector2Int.up,
+            Vector2Int.down,
+            Vector2Int.left,
+            Vector2Int.right
         };
 
-        int index = Random.Range(0, directions.Count);
-        return directions[index];
+        // 50% chance to continue in the same direction, if there was a previous move
+        if (lastDirection != Vector2Int.zero && Random.value <= 0.6f)
+        {
+            return lastDirection;
+        }
+
+        // Otherwise, pick a random direction
+        return directions[Random.Range(0, directions.Count)];
     }
 
 
