@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     public int currentHealth;
     public float moveSpeed = 5f;
     public float invincibilityDurationAfterHit = 3f;
+    public int coinCount = 0;
 
     // Attack Properties
     public int slashDamage = 10;
@@ -38,9 +39,9 @@ public class PlayerController : MonoBehaviour
     public float slashCooldown = 1f;
     public float daggerCooldown = 0.5f;
     public float dashCooldown = 2.5f;
-    private float lastSlashTime = -Mathf.Infinity;
-    private float lastDaggerTime = -Mathf.Infinity;
-    private float lastDashTime = -Mathf.Infinity;
+    public float lastSlashTime = -Mathf.Infinity;
+    public float lastDaggerTime = -Mathf.Infinity;
+    public float lastDashTime = -Mathf.Infinity;
 
     // Player States
     private bool isDashing = false;
@@ -62,6 +63,11 @@ public class PlayerController : MonoBehaviour
     private PlayerInputActions playerInputActions;
     private AudioSource audioSource;
     public TrailRenderer dashTrail;
+    public HeartsManager heartsManager;
+    public AbilityCooldownDisplay slashCooldownUI;
+    public AbilityCooldownDisplay daggerCooldownUI;
+    public AbilityCooldownDisplay dashCooldownUI;
+    public DayOverScreenController dayOverScreenController;
 
     // Sound Effects
     public AudioClip slashSound;         
@@ -83,6 +89,8 @@ public class PlayerController : MonoBehaviour
         playerInputActions = new PlayerInputActions();
         audioSource = GetComponent<AudioSource>();
         currentHealth = maxHealth;
+        heartsManager.InitializeHearts(maxHealth);
+        heartsManager.UpdateHearts(currentHealth);
         DisableAllHitboxes();
     }
 
@@ -120,6 +128,18 @@ public class PlayerController : MonoBehaviour
         playerInputActions.Player.SwitchWeapon.performed -= OnSwitchWeapon;
         playerInputActions.Player.Dash.performed -= OnDash;
         playerInputActions.Player.Disable();
+    }
+
+    public void EnablePlayerInput(bool enable)
+    {
+        if (enable)
+        {
+            playerInputActions.Player.Enable();  // Enable player input when not paused
+        }
+        else
+        {
+            playerInputActions.Player.Disable();  // Disable player input when paused
+        }
     }
 
 
@@ -196,6 +216,7 @@ public class PlayerController : MonoBehaviour
         if (currentWeapon == WeaponType.Slash && Time.time > lastSlashTime + slashCooldown)
         {
             lastSlashTime = Time.time;
+            slashCooldownUI.StartCooldown(slashCooldown);
             DisableAllHitboxes();
             AttackUpHitbox.enabled = true;
             animator.SetTrigger("AttackUp");
@@ -204,6 +225,7 @@ public class PlayerController : MonoBehaviour
         if (currentWeapon == WeaponType.Dagger && Time.time > lastDaggerTime + daggerCooldown)
         {
             lastDaggerTime = Time.time;
+            daggerCooldownUI.StartCooldown(daggerCooldown);
             ThrowDagger(Vector2.up);
         }
         else
@@ -222,6 +244,7 @@ public class PlayerController : MonoBehaviour
         if (currentWeapon == WeaponType.Slash && Time.time > lastSlashTime + slashCooldown)
         {
             lastSlashTime = Time.time;
+            slashCooldownUI.StartCooldown(slashCooldown);
             DisableAllHitboxes();
             AttackDownHitbox.enabled = true;
             animator.SetTrigger("AttackDown");
@@ -230,6 +253,7 @@ public class PlayerController : MonoBehaviour
         if (currentWeapon == WeaponType.Dagger && Time.time > lastDaggerTime + daggerCooldown)
         {
             lastDaggerTime = Time.time;
+            daggerCooldownUI.StartCooldown(daggerCooldown);
             ThrowDagger(Vector2.down);
         }
         else
@@ -248,6 +272,7 @@ public class PlayerController : MonoBehaviour
         if (currentWeapon == WeaponType.Slash && Time.time > lastSlashTime + slashCooldown)
         {
             lastSlashTime = Time.time;
+            slashCooldownUI.StartCooldown(slashCooldown);
             DisableAllHitboxes();
             AttackLeftHitbox.enabled = true;
             animator.SetTrigger("AttackLeft");
@@ -256,6 +281,7 @@ public class PlayerController : MonoBehaviour
         if (currentWeapon == WeaponType.Dagger && Time.time > lastDaggerTime + daggerCooldown)
         {
             lastDaggerTime = Time.time;
+            daggerCooldownUI.StartCooldown(daggerCooldown);
             ThrowDagger(Vector2.left);
         }
         else
@@ -274,6 +300,7 @@ public class PlayerController : MonoBehaviour
         if (currentWeapon == WeaponType.Slash && Time.time > lastSlashTime + slashCooldown)
         {
             lastSlashTime = Time.time;
+            slashCooldownUI.StartCooldown(slashCooldown);
             DisableAllHitboxes();
             AttackRightHitbox.enabled = true;
             animator.SetTrigger("AttackRight");
@@ -282,6 +309,7 @@ public class PlayerController : MonoBehaviour
         if (currentWeapon == WeaponType.Dagger && Time.time > lastDaggerTime + daggerCooldown)
         {
             lastDaggerTime = Time.time;
+            daggerCooldownUI.StartCooldown(daggerCooldown);
             ThrowDagger(Vector2.right);
         }
         else
@@ -314,7 +342,8 @@ public class PlayerController : MonoBehaviour
         if (isDashing || Time.time < lastDashTime + dashCooldown)
             return;
 
-        lastDashTime = Time.time; 
+        lastDashTime = Time.time;
+        dashCooldownUI.StartCooldown(dashCooldown);
 
         Vector2 dashDirection = moveInput != Vector2.zero ? moveInput.normalized : lastFacedDirection;
         PerformDash(dashDirection);
@@ -390,6 +419,8 @@ public class PlayerController : MonoBehaviour
             return;
 
         currentHealth -= damage;
+        currentHealth = Mathf.Max(currentHealth, 0);
+        heartsManager.UpdateHearts(currentHealth);
 
         if (currentHealth <= 0)
         {
@@ -430,15 +461,31 @@ public class PlayerController : MonoBehaviour
     }
 
 
+    public void Heal(int amount)
+    {
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth); 
+        heartsManager.UpdateHearts(currentHealth);  
+    }
+
+
     /// <summary>
     /// Handles player death, disables movement, and stops all actions.
     /// </summary>
-    void Die()
+    public void Die()
     {
         animator.SetTrigger("Die");
         isAlive = false;
         rb.velocity = Vector2.zero;
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
         this.enabled = false;
+        dayOverScreenController.ShowDieScreen();
     }
+
+    public void Escape()
+    {
+        GameManager.Instance.Escaped();
+        dayOverScreenController.ShowEscapeScreen();
+    }
+
+
 }

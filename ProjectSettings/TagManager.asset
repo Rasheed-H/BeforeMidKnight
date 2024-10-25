@@ -9,6 +9,7 @@ TagManager:
   - Dagger
   - Dash
   - Wall
+  - Chest
   layers:
   - Default
   - TransparentFX
@@ -20,8 +21,8 @@ TagManager:
   - Player
   - Projectile
   - AttackHitbox
-  - 
-  - 
+  - Collectable
+  - Object
   - 
   - 
   - 

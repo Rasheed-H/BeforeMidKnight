@@ -1,5 +1,12 @@
 using UnityEngine;
 
+[System.Serializable]
+public class Drops
+{
+    public GameObject itemPrefab;  // The item prefab (coin, etc.)
+    public float dropChance;       // The chance of dropping this item
+}
+
 /// <summary>
 /// The base class for enemies in the game. This class handles common enemy behavior, such as taking damage,
 /// activation/deactivation, and defeat. It also provides a structure for future enemy scaling (adjusting stats).
@@ -20,6 +27,9 @@ public class Enemy : MonoBehaviour
     protected Rigidbody2D rb;                         
     protected Animator animator;                     
     protected SpriteRenderer spriteRenderer;
+
+    [Header("Drop Settings")]
+    public Drops[] itemDrops;  // Array of potential drops (coins)
 
 
     /// <summary>
@@ -98,8 +108,33 @@ public class Enemy : MonoBehaviour
         Collider2D col = GetComponent<Collider2D>();
         col.enabled = false;
         roomController.OnEnemyDefeated();
+        DropItem();
         Destroy(gameObject, 1f);
     }
+
+    /// <summary>
+    /// Randomly chooses a coin to drop based on drop chances.
+    /// </summary>
+    public void DropItem()
+    {
+        float randomValue = Random.Range(0f, 100f);  // Random value between 0 and 100
+        float cumulativeChance = 0f;
+
+        foreach (Drops drop in itemDrops) // Loop through each possible drop
+        {
+            cumulativeChance += drop.dropChance;
+
+            if (randomValue <= cumulativeChance)  // If within this drop's chance, drop it
+            {
+                Instantiate(drop.itemPrefab, transform.position, Quaternion.identity);
+                return;  // Exit after dropping one item
+            }
+        }
+
+        // No coin will drop if the randomValue is greater than the cumulative chances of all items
+        // This means the chance for nothing to drop is the remaining percent (100% - cumulativeChance)
+    }
+
 
 
     /// <summary>

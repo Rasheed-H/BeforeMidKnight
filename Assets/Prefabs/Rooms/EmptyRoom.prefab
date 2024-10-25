@@ -472,10 +472,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   possibleObjects:
-  - {fileID: 2665638557316323189, guid: 2ba8ae12d7c9c9d4da1f55f65dbdd053, type: 3}
-  - {fileID: 6700581612938788971, guid: 3fb85a22aaca4264bbed06a87a4c8bbc, type: 3}
-  minObjects: 1
-  maxObjects: 5
+  - objectPrefab: {fileID: 696528044583984677, guid: beeb30c8e81b4214594042f12c3b4ce7, type: 3}
+    spawnChance: 10
+  minObjects: 0
+  maxObjects: 2
+  possibleEnemies:
+  - objectPrefab: {fileID: 2665638557316323189, guid: 2ba8ae12d7c9c9d4da1f55f65dbdd053, type: 3}
+    spawnChance: 75
+  - objectPrefab: {fileID: 6700581612938788971, guid: 3fb85a22aaca4264bbed06a87a4c8bbc, type: 3}
+    spawnChance: 25
+  minEnemies: 1
+  maxEnemies: 5
   spawnedEnemies: []
 --- !u!82 &3481361825063762055
 AudioSource:

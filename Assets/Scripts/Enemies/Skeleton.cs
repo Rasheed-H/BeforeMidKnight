@@ -11,15 +11,15 @@ public class Skeleton : Enemy
     public AudioClip deathSound;
     public AudioClip shootSound;
 
-    public float shootingRange = 10f;     // Distance from player at which skeleton stops to shoot
-    public float fleeingDistance = 3f;    // Distance at which the skeleton flees from the player
-    public float fleeDuration = 1f;       // How long the skeleton flees for
-    public float fleeSpeedMultiplier = 2.5f;  // Multiplier for speed while fleeing
-    public float fleeCooldown = 8f;       // Cooldown after fleeing before skeleton can flee again
+    public float shootingRange = 10f;    
+    public float fleeingDistance = 3f;   
+    public float fleeDuration = 1f;     
+    public float fleeSpeedMultiplier = 2.5f; 
+    public float fleeCooldown = 8f;       
 
-    public GameObject arrowPrefab;        // The arrow prefab to instantiate
-    public Transform arrowSpawnPoint;     // The point from where the arrow will be instantiated
-    public float fireRate = 1.5f;         // The rate at which the skeleton can shoot
+    public GameObject arrowPrefab;        
+    public Transform arrowSpawnPoint;     
+    public float fireRate = 1.5f;         
 
     private float lastFireTime = 0f;
     private Vector2 movementDirection;
