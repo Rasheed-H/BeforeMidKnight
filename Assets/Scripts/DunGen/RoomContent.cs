@@ -9,18 +9,18 @@ using UnityEngine;
 public class RoomContent : MonoBehaviour
 {
     [Header("Objects Settings")]
-    public List<Spawnable> possibleObjects;  // List of objects with spawn chance
+    public List<Spawnable> possibleObjects;  
     public int minObjects = 1;
     public int maxObjects = 5;
 
     [Header("Enemies Settings")]
-    public List<Spawnable> possibleEnemies;  // List of enemies with spawn chance
+    public List<Spawnable> possibleEnemies;  
     public int minEnemies = 1;
     public int maxEnemies = 5;
 
     [Header("Room Size Settings")]
-    private float roomWidth = 16f;
-    private float roomHeight = 9f;
+    private float roomWidth = 25f;
+    private float roomHeight = 15f;
 
     public List<Enemy> spawnedEnemies = new List<Enemy>();
 
@@ -104,7 +104,7 @@ public class RoomContent : MonoBehaviour
             }
         }
 
-        return null; // No item selected
+        return null; 
     }
 
     /// <summary>
@@ -127,6 +127,17 @@ public class RoomContent : MonoBehaviour
 
         return new Vector2(x, y);
     }
+
+    /// <summary>
+    /// Provides the bounds of the room as a Vector2.
+    /// X represents half of the room's width, and Y represents half of the room's height.
+    /// </summary>
+    public Bounds GetRoomBounds()
+    {
+        Vector2 roomCenter = transform.position;
+        Vector2 size = new Vector2(roomWidth, roomHeight);
+        return new Bounds(roomCenter, size);
+    }
 }
 
 /// <summary>
@@ -135,6 +146,6 @@ public class RoomContent : MonoBehaviour
 [System.Serializable]
 public class Spawnable
 {
-    public GameObject objectPrefab;  // The prefab of the object or enemy to spawn
-    public float spawnChance;      // The chance (in percentage) of this item being selected
+    public GameObject objectPrefab; 
+    public float spawnChance;      
 }

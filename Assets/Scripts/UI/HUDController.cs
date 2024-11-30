@@ -7,13 +7,13 @@ using TMPro;
 /// </summary>
 public class HUDController : MonoBehaviour
 {
-    public PlayerController player;
+    public Player player;
 
     [SerializeField] private TMP_Text coinText;
     [SerializeField] private TMP_Text timerText;
 
-    private float gameTime = 8 * 60;  // Start time set to 8:00 AM in minutes
-    private float timeIncrement = 60f; // Speed of in-game time progression
+    private float gameTime = 1080;  // Start time set to 6:00 PM in minutes
+    private float timeIncrementPerSecond = 0.6f; // In-game minutes per real-time second
 
     /// <summary>
     /// Initializes the HUD by setting the initial coin count and timer text.
@@ -30,7 +30,7 @@ public class HUDController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        gameTime += Time.deltaTime * (timeIncrement / 60f);
+        gameTime += Time.deltaTime * timeIncrementPerSecond; // Increment game time by 0.6 minutes per real-time second
         UpdateTimerText();
 
         if (gameTime >= 1440) // 1440 minutes = 12:00 AM
@@ -44,7 +44,7 @@ public class HUDController : MonoBehaviour
     /// </summary>
     public void UpdateCoinText()
     {
-        coinText.text = $"x {GameManager.Instance.currentCoins}";
+        coinText.text = $"x {GameManager.Instance.coinsHolding}";
     }
 
     /// <summary>
@@ -57,6 +57,6 @@ public class HUDController : MonoBehaviour
         int minutes = Mathf.FloorToInt(gameTime % 60);
         string period = gameTime >= 720 ? "PM" : "AM";
 
-        timerText.text = $"{hours:D2}:{minutes:D2}{period}";
+        timerText.text = $"{hours:D2}:{minutes:D2} {period}";
     }
 }

@@ -76,10 +76,10 @@ public class Goblin : Enemy
 
         if (collision.gameObject.CompareTag("Player"))
         {
-            PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
-            if (playerController != null)
+            Player player = collision.gameObject.GetComponent<Player>();
+            if (player != null)
             {
-                playerController.TakeDamage(damage); 
+                player.TakeDamage(damage); 
             }
         }
     }

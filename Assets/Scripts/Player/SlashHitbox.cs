@@ -5,18 +5,14 @@ using UnityEngine;
 /// </summary>
 public class SlashHitbox : MonoBehaviour
 {
-    private PlayerController playerController;
+    private PlayerAttack playerAttack;
 
     /// <summary>
     /// Called when the script is initialized. Attempts to get a reference to the PlayerController in the parent object.
     /// </summary>
     void Start()
     {
-        playerController = GetComponentInParent<PlayerController>();
-        if (playerController == null)
-        {
-            Debug.LogError("PlayerController not found in parent.");
-        }
+        playerAttack = GetComponentInParent<PlayerAttack>();
     }
 
     /// <summary>
@@ -30,8 +26,8 @@ public class SlashHitbox : MonoBehaviour
             Enemy enemy = collision.GetComponent<Enemy>();
             if (enemy != null)
             {
-                enemy.TakeDamage(playerController.slashDamage);
-                Debug.Log("Enemy hit by slash! Damage applied: " + playerController.slashDamage);
+                enemy.TakeDamage(playerAttack.slashDamage);
+                Debug.Log("Enemy hit by slash! Damage applied: " + playerAttack.slashDamage);
             }
         }
     }

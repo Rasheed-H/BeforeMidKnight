@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f8af6f7a1ce1a14a99f53e635a0ceea, type: 3}
+  m_Name: SpeedBoots
+  m_EditorClassIdentifier: 
+  itemName: Speed Boots
+  itemSprite: {fileID: -1742227962, guid: 2fc4575b3cc681e4eab07547d8696c64, type: 3}
+  itemDescription: Increases player movement speed.\n\n+3 Move Speed
+  itemPrice: 0
+  itemRarity: 
+  statModifiers:
+  - statName: playerMoveSpeed
+    value: 3
+  specialEffects:
+  - DashResetOnKill

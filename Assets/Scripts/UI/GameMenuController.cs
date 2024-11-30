@@ -17,16 +17,11 @@ public class GameMenuController : MonoBehaviour
     /// <summary>
     /// Initializes the game menu, checks game over conditions, and updates the UI.
     /// </summary>
-    private void Start()
+    private void Awake()
     {
-        if (GameManager.Instance.lives <= 0)
-        {
-            SceneManager.LoadScene("GameOverMenu");
-        }
-
         if (GameManager.Instance.daysRemaining <= 0)
         {
-            if (GameManager.Instance.weekCoins < GameManager.Instance.coinQuota)
+            if (GameManager.Instance.weeklyCoins < GameManager.Instance.coinQuota)
             {
                 SceneManager.LoadScene("GameOverMenu");
             }
@@ -45,8 +40,8 @@ public class GameMenuController : MonoBehaviour
     {
         daysLeftText.text = $"Days Left: {GameManager.Instance.daysRemaining}";
         currentWeekText.text = $"Week: {GameManager.Instance.currentWeek}";
-        weeklyQuotaText.text = $"{GameManager.Instance.weekCoins} / {GameManager.Instance.coinQuota}";
-        totalCoinsText.text = $"{GameManager.Instance.totalCoins}";
+        weeklyQuotaText.text = $"{GameManager.Instance.weeklyCoins} / {GameManager.Instance.coinQuota}";
+        totalCoinsText.text = $"{GameManager.Instance.coinsDeposited}";
     }
 
     /// <summary>
@@ -55,7 +50,7 @@ public class GameMenuController : MonoBehaviour
     public void OnStartGameClicked()
     {
         GameManager.Instance.StartDay();
-        SceneManager.LoadScene("DungeonMain");
+        SceneManager.LoadScene("DungeonMainTest");
     }
 
     /// <summary>
@@ -73,4 +68,27 @@ public class GameMenuController : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenu");
     }
+
+    public ItemData speedBoots;
+    /**
+    public void TestPurchase()
+    {
+        GameManager.Instance.PurchaseItem(speedBoots);
+        Debug.Log($"Purchased {speedBoots.itemName}. Coins remaining: {GameManager.Instance.coinsDeposited}");
+    }
+
+    // Equip the Speed Boots
+    public void TestEquip()
+    {
+        GameManager.Instance.EquipItem(speedBoots);
+        Debug.Log($"Equipped {speedBoots.itemName}. Current playerMoveSpeed: {GameManager.Instance.GetStat("playerMoveSpeed")}");
+    }
+
+    // Unequip the Speed Boots
+    public void TestUnequip()
+    {
+        GameManager.Instance.UnequipItem(speedBoots);
+        Debug.Log($"Unequipped {speedBoots.itemName}. Current playerMoveSpeed: {GameManager.Instance.GetStat("playerMoveSpeed")}");
+    }
+    **/
 }

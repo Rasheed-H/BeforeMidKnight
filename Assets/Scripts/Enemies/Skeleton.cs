@@ -47,7 +47,6 @@ public class Skeleton : Enemy
                 isFleeTimerActive = false;
                 fleeTimer = 0f;
                 fleeCooldownTimer = fleeCooldown; 
-                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Enemy"), false);
             }
         }
         else if (fleeCooldownTimer > 0)
@@ -138,8 +137,7 @@ public class Skeleton : Enemy
         {
             isFleeing = true;
             isFleeTimerActive = true;
-            fleeTimer = 0f; // Reset flee timer
-            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Enemy"), true); 
+            fleeTimer = 0f; 
         }
         else if (distanceToPlayer <= shootingRange) 
         {

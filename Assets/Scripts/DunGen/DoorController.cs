@@ -1,64 +1,48 @@
 using UnityEngine;
 
-/// <summary>
-/// Controls the behavior of a door in the game, including its locked and unlocked state.
-/// </summary>
 public class DoorController : MonoBehaviour
 {
-    public Sprite openDoorSprite;
-    public Sprite closedDoorSprite;
-
-    private SpriteRenderer spriteRenderer;
-    private Collider2D blockingCollider;
-    private bool isUnlocked = true;
-
+    public GameObject doorOpen;    // Reference to the DoorOpen state GameObject
+    public GameObject doorClosed;  // Reference to the DoorClosed state GameObject
+    public GameObject noDoor;      // Reference to the NoDoor state GameObject
 
     /// <summary>
-    /// Called when the DoorController script is initialized.
-    /// Gets references to the SpriteRenderer and Collider2D components attached to the door.
+    /// Sets the door state to open, closed, or no door.
     /// </summary>
-    void Awake()
+    /// <param name="state">The state to set: "open", "closed", or "none".</param>
+    public void SetDoorState(string state)
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        blockingCollider = GetComponent<Collider2D>();
-    }
-
-
-    /// <summary>
-    /// Called when the scene starts.
-    /// Sets the door's initial state (either open or closed) based on whether the door is unlocked.
-    /// </summary>
-    void Start()
-    {
-        if (!gameObject.activeInHierarchy)
-            return;
-
-        SetDoorState(isUnlocked);
-    }
-
-
-    /// <summary>
-    /// Sets the state of the door to either unlocked (open) or locked (closed),
-    /// updating the door's sprite and enabling or disabling the blocking collider.
-    /// </summary>
-    /// <param name="unlocked">A boolean that determines whether the door should be unlocked (true) or locked (false).</param>
-    public void SetDoorState(bool unlocked)
-    {
-
-        if (!gameObject.activeInHierarchy)
-            return;
-        
-        isUnlocked = unlocked;
-
-        if (isUnlocked)
+        // If NoDoor is active, don't allow state changes
+        if (noDoor.activeSelf)
         {
-            spriteRenderer.sprite = openDoorSprite;
-            blockingCollider.enabled = false; 
+            Debug.Log($"Door {gameObject.name} is set to NoDoor and cannot be changed.");
+            return;
         }
-        else
+
+        // Deactivate all states first
+        doorOpen.SetActive(false);
+        doorClosed.SetActive(false);
+        noDoor.SetActive(false);
+
+        // Activate the correct state
+        switch (state.ToLower())
         {
-            spriteRenderer.sprite = closedDoorSprite;
-            blockingCollider.enabled = true; 
+            case "open":
+                doorOpen.SetActive(true);
+                break;
+
+            case "closed":
+                doorClosed.SetActive(true);
+                break;
+
+            case "none":
+                noDoor.SetActive(true);
+                break;
+
+            default:
+                Debug.LogWarning($"Invalid door state '{state}' for {gameObject.name}. Setting to NoDoor.");
+                noDoor.SetActive(true);
+                break;
         }
     }
 }

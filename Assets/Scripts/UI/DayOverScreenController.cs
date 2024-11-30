@@ -10,7 +10,6 @@ public class DayOverScreenController : MonoBehaviour
     public TMP_Text titleText;             
     public TMP_Text infoText;              
     public TMP_Text coinValueText;        
-    public TMP_Text livesRemainingText;    
 
     /// <summary>
     /// Displays the "You Escaped!" screen with information about coins deposited.
@@ -20,8 +19,7 @@ public class DayOverScreenController : MonoBehaviour
 
         titleText.text = "You Escaped!";
         infoText.text = "Coins Deposited:";
-        coinValueText.text = $"x {GameManager.Instance.currentCoins}";
-        livesRemainingText.text = ""; 
+        coinValueText.text = $"x {GameManager.Instance.coinsHolding}";
 
 
         DisplayScreen();
@@ -34,8 +32,7 @@ public class DayOverScreenController : MonoBehaviour
     {
         titleText.text = "You Died!";
         infoText.text = "Coins Lost:";
-        coinValueText.text = $"x {GameManager.Instance.currentCoins}"; 
-        livesRemainingText.text = $"Lives Remaining: {GameManager.Instance.lives}"; 
+        coinValueText.text = $"x {GameManager.Instance.coinsHolding}"; 
 
 
         DisplayScreen();

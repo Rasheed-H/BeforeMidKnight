@@ -6,11 +6,11 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// Enum representing the two weapon types: Slash and Dagger.
 /// </summary>
-public enum WeaponType
-{
-    Slash,
-    Dagger
-}
+//public enum WeaponType
+//{
+//    Slash,
+//    Dagger
+//}
 
 
 /// <summary>

@@ -3,14 +3,13 @@ using UnityEngine;
 [System.Serializable]
 public class Drops
 {
-    public GameObject itemPrefab;  // The item prefab (coin, etc.)
-    public float dropChance;       // The chance of dropping this item
+    public GameObject itemPrefab; 
+    public float dropChance;       
 }
 
 /// <summary>
 /// The base class for enemies in the game. This class handles common enemy behavior, such as taking damage,
-/// activation/deactivation, and defeat. It also provides a structure for future enemy scaling (adjusting stats).
-/// Derived enemy classes can inherit from this base and extend its functionality.
+/// activation/deactivation, and defeat. Derived enemy classes can inherit from this base and extend its functionality.
 /// </summary>
 public class Enemy : MonoBehaviour
 {
@@ -29,7 +28,7 @@ public class Enemy : MonoBehaviour
     protected SpriteRenderer spriteRenderer;
 
     [Header("Drop Settings")]
-    public Drops[] itemDrops;  // Array of potential drops (coins)
+    public Drops[] itemDrops;  
 
 
     /// <summary>
@@ -117,22 +116,20 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public void DropItem()
     {
-        float randomValue = Random.Range(0f, 100f);  // Random value between 0 and 100
+        float randomValue = Random.Range(0f, 100f);  
         float cumulativeChance = 0f;
 
-        foreach (Drops drop in itemDrops) // Loop through each possible drop
+        foreach (Drops drop in itemDrops) 
         {
             cumulativeChance += drop.dropChance;
 
-            if (randomValue <= cumulativeChance)  // If within this drop's chance, drop it
+            if (randomValue <= cumulativeChance)  
             {
                 Instantiate(drop.itemPrefab, transform.position, Quaternion.identity);
-                return;  // Exit after dropping one item
+                return;  
             }
         }
 
-        // No coin will drop if the randomValue is greater than the cumulative chances of all items
-        // This means the chance for nothing to drop is the remaining percent (100% - cumulativeChance)
     }
 
 
@@ -146,18 +143,4 @@ public class Enemy : MonoBehaviour
         return isDefeated;
     }
 
-    /// <summary>
-    /// Scales the enemy's stats based on a multiplier. This can be used to dynamically adjust enemy difficulty
-    /// as the player progresses through the game. The method adjusts the enemy’s health, damage, and speed.
-    /// </summary>
-    /// <param name="multiplier">The factor by which to scale the enemy's stats.</param>
-    public virtual void ScaleStats(float multiplier)
-    {
-        maxHealth = Mathf.RoundToInt(maxHealth * multiplier);
-        currentHealth = maxHealth;                            
-        damage = Mathf.RoundToInt(damage * multiplier);       
-        speed *= multiplier;                                  
-
-        Debug.Log($"{gameObject.name} scaled! New stats - Health: {maxHealth}, Damage: {damage}, Speed: {speed}");
-    }
 }

@@ -7,20 +7,18 @@ using System.Collections.Generic;
 /// </summary>
 public class DungeonGenerator : MonoBehaviour
 {
-    // Room Prefabs
     public GameObject startRoomPrefab;    
     public GameObject emptyRoomPrefab;    
     public GameObject treasureRoomPrefab; 
     public GameObject endRoomPrefab;      
 
-    // Dungeon Generation Variables
     public int minIterations = 10;      
     public int maxIterations = 20;      
     public int numberOfCrawlers = 2;   
     public float treasureRoomChance = 0.1f; 
 
-    public float roomWidth = 16f;       
-    public float roomHeight = 9f;       
+    public float roomWidth = 25f;       
+    public float roomHeight = 15f;       
 
     // Dictionary to track spawned rooms using their grid positions
     private Dictionary<Vector2Int, GameObject> spawnedRooms = new Dictionary<Vector2Int, GameObject>();
@@ -79,7 +77,7 @@ public class DungeonGenerator : MonoBehaviour
                 Vector2Int newPosition = crawler.position + direction;
 
                 crawler.position = newPosition;
-                crawler.lastDirection = direction; // Update the last direction
+                crawler.lastDirection = direction; 
 
                 if (!spawnedRooms.ContainsKey(newPosition))
                 {
@@ -116,7 +114,6 @@ public class DungeonGenerator : MonoBehaviour
     /// <returns>A Vector2Int representing the direction to move in the grid.</returns>
     Vector2Int GetDirection(Vector2Int lastDirection)
     {
-        // List of possible directions
         List<Vector2Int> directions = new List<Vector2Int>
         {
             Vector2Int.up,
@@ -125,13 +122,11 @@ public class DungeonGenerator : MonoBehaviour
             Vector2Int.right
         };
 
-        // 50% chance to continue in the same direction, if there was a previous move
         if (lastDirection != Vector2Int.zero && Random.value <= 0.6f)
         {
             return lastDirection;
         }
 
-        // Otherwise, pick a random direction
         return directions[Random.Range(0, directions.Count)];
     }
 
@@ -174,7 +169,7 @@ public class DungeonGenerator : MonoBehaviour
     /// <summary>
     /// Connects all rooms by activating doors between adjacent rooms.
     /// </summary>
-    void UpdateRoomDoors()
+    private void UpdateRoomDoors()
     {
         foreach (KeyValuePair<Vector2Int, GameObject> roomEntry in spawnedRooms)
         {
@@ -187,20 +182,10 @@ public class DungeonGenerator : MonoBehaviour
             bool hasLeftRoom = spawnedRooms.ContainsKey(roomPos + Vector2Int.left);
             bool hasRightRoom = spawnedRooms.ContainsKey(roomPos + Vector2Int.right);
 
-            roomController.SetDoorActive("Up", hasUpRoom);
-            roomController.SetDoorActive("Down", hasDownRoom);
-            roomController.SetDoorActive("Left", hasLeftRoom);
-            roomController.SetDoorActive("Right", hasRightRoom);
+            roomController.doorTop.SetDoorState(hasUpRoom ? "open" : "none");
+            roomController.doorBottom.SetDoorState(hasDownRoom ? "open" : "none");
+            roomController.doorLeft.SetDoorState(hasLeftRoom ? "open" : "none");
+            roomController.doorRight.SetDoorState(hasRightRoom ? "open" : "none");
         }
-    }
-
-
-    /// <summary>
-    /// Adjusts the treasure room chance dynamically.
-    /// </summary>
-    /// <param name="newChance">The new chance for spawning treasure rooms (value between 0.0 and 1.0).</param>
-    public void SetTreasureRoomChance(float newChance)
-    {
-        treasureRoomChance = newChance;
     }
 }

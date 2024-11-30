@@ -63,7 +63,7 @@ public class PauseController : MonoBehaviour
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         isPaused = true;
-        playerController.EnablePlayerInput(false);
+        //playerController.EnablePlayerInput(false);
     }
 
     /// <summary>
@@ -74,7 +74,7 @@ public class PauseController : MonoBehaviour
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
         isPaused = false;
-        playerController.EnablePlayerInput(true);
+        //playerController.EnablePlayerInput(true);
     }
 
     /// <summary>

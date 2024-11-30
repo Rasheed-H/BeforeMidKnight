@@ -14,6 +14,10 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private Color disabledButtonTextColor;
     [SerializeField] private GameObject newGameWarningPopup;
 
+    [Header("UI References")]
+    public GameObject scoreStatsUI;  
+    public ScoreListController scoreListController;  
+
     /// <summary>
     /// Initializes the main menu, checking the game state to set up the Continue button accordingly.
     /// </summary>
@@ -83,6 +87,17 @@ public class MainMenuController : MonoBehaviour
         {
             SceneManager.LoadScene("GameMenu");
         }
+    }
+
+    /// <summary>
+    /// Called when the Scores/Stats button is clicked.
+    /// Enables the ScoreStatsUI and calls DisplayScores to populate the leaderboard.
+    /// </summary>
+    public void OnScoresStatsButtonClicked()
+    {
+        scoreListController.DisplayScores();
+
+        scoreStatsUI.SetActive(true);
     }
 
     /// <summary>

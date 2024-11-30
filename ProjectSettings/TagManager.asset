@@ -19,17 +19,17 @@ TagManager:
   - UI
   - Wall
   - Player
-  - Projectile
+  - EnemyProjectile
   - AttackHitbox
   - Collectable
   - Object
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Goblin
+  - Skeleton
+  - Ghast
+  - DaggerHitbox
+  - DashHitbox
+  - Wizard
+  - Demon
   - 
   - 
   - 

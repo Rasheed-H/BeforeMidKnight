@@ -10,13 +10,16 @@ using System.Collections.Generic;
 public class RoomController : MonoBehaviour
 {
 
-    public GameObject[] doors; 
-    public GameObject[] doorGapColliders;
-    private List<Enemy> enemies = new List<Enemy>();
     private AudioSource audioSource;
     private Camera mainCamera;
     public float cameraTransitionDuration = 0.5f;
 
+    public DoorController doorTop;
+    public DoorController doorBottom;
+    public DoorController doorLeft;
+    public DoorController doorRight;
+
+    private List<Enemy> enemies = new List<Enemy>();
 
     /// <summary>
     /// Called when the room controller is initialized. 
@@ -30,22 +33,10 @@ public class RoomController : MonoBehaviour
 
 
     /// <summary>
-    /// Called when the room starts.
-    /// Unlocks all doors in the room at the start.
-    /// </summary>
-    void Start()
-    {
-        UnlockDoors();
-    }
-
-
-    /// <summary>
     /// Called when the player enters the room.
-    /// Moves the camera to the current room, activates the enemies,
-    /// and locks the doors if there are enemies alive.
     /// </summary>
-    /// <param name="other">The collider that triggered this event (in this case, the player).</param>
-    void OnTriggerEnter2D(Collider2D other)
+    /// <param name="other">The collider that triggered this event.</param>
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
@@ -54,138 +45,68 @@ public class RoomController : MonoBehaviour
 
             if (AreEnemiesAlive())
             {
-                Debug.Log("Enemies alive in room: " + gameObject.name + ", locking doors.");
-                LockDoors();
+                SetAllDoorsState("closed");
             }
             else
             {
-                Debug.Log("No enemies alive in room: " + gameObject.name + ", doors remain unlocked.");
-                UnlockDoors();
+                SetAllDoorsState("open");
             }
         }
     }
 
-
     /// <summary>
     /// Called when the player exits the room.
-    /// Deactivates enemies and unlocks the doors when the player leaves.
     /// </summary>
-    /// <param name="other">The collider that triggered this event (in this case, the player).</param>
-    void OnTriggerExit2D(Collider2D other)
+    /// <param name="other">The collider that triggered this event.</param>
+    private void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
             DeactivateEnemies();
-            UnlockDoors();
         }
     }
 
-
     /// <summary>
-    /// Registers the enemies in the room by adding them to the list of enemies.
+    /// Registers the enemies in the room.
     /// </summary>
-    /// <param name="roomEnemies">A list of enemies to register in the room.</param>
+    /// <param name="roomEnemies">List of enemies to register.</param>
     public void RegisterEnemies(List<Enemy> roomEnemies)
     {
         enemies.AddRange(roomEnemies);
     }
 
-
     /// <summary>
     /// Called when an enemy is defeated.
-    /// Unlocks the doors if there are no remaining alive enemies in the room.
+    /// Unlocks doors if all enemies are defeated.
     /// </summary>
     public void OnEnemyDefeated()
     {
         if (!AreEnemiesAlive())
         {
-            UnlockDoors();
+            SetAllDoorsState("open");
         }
     }
-
 
     /// <summary>
     /// Checks if any enemies in the room are still alive.
     /// </summary>
-    /// <returns>Returns true if any enemies are alive, false otherwise.</returns>
-    public bool AreEnemiesAlive()
+    /// <returns>True if enemies are alive, false otherwise.</returns>
+    private bool AreEnemiesAlive()
     {
         foreach (Enemy enemy in enemies)
         {
-            if (enemy != null && enemy.gameObject.activeInHierarchy && !enemy.IsDefeated())
+            if (enemy != null && !enemy.IsDefeated())
             {
-                return true; 
+                return true;
             }
         }
-        return false; 
+        return false;
     }
 
-
     /// <summary>
-    /// Moves the camera smoothly to the current room's position.
+    /// Activates all enemies in the room.
     /// </summary>
-    void MoveCameraToRoom()
-    {
-        StartCoroutine(SmoothCameraTransition());
-    }
-
-
-    /// <summary>
-    /// Coroutine that moves the camera to the room's position over a set duration.
-    /// </summary>
-    /// <returns>An IEnumerator for Unity's coroutine system.</returns>
-    IEnumerator SmoothCameraTransition()
-    {
-        Vector3 startPos = mainCamera.transform.position;
-        Vector3 endPos = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z);
-        float elapsedTime = 0f;
-
-        while (elapsedTime < cameraTransitionDuration)
-        {
-            mainCamera.transform.position = Vector3.Lerp(startPos, endPos, (elapsedTime / cameraTransitionDuration));
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        mainCamera.transform.position = endPos;
-    }
-
-
-    /// <summary>
-    /// Locks all doors in the room, preventing player movement between rooms.
-    /// </summary>
-    void LockDoors()
-    {
-        foreach (GameObject door in doors)
-        {
-            if (!door.activeInHierarchy)
-                continue;
-
-            DoorController doorController = door.GetComponent<DoorController>();
-            doorController.SetDoorState(false); 
-        }
-    }
-
-
-    /// <summary>
-    /// Unlocks all doors in the room, allowing player movement between rooms.
-    /// </summary>
-    void UnlockDoors()
-    {
-        foreach (GameObject door in doors)
-        {
-            if (!door.activeInHierarchy)
-                continue;
-            DoorController doorController = door.GetComponent<DoorController>();
-            doorController.SetDoorState(true); 
-        }
-    }
-
-
-    /// <summary>
-    /// Activates all enemies in the room, enabling their behavior and movement.
-    /// </summary>
-    void ActivateEnemies()
+    private void ActivateEnemies()
     {
         foreach (Enemy enemy in enemies)
         {
@@ -196,11 +117,10 @@ public class RoomController : MonoBehaviour
         }
     }
 
-
     /// <summary>
-    /// Deactivates all enemies in the room, stopping their behavior and movement.
+    /// Deactivates all enemies in the room.
     /// </summary>
-    void DeactivateEnemies()
+    private void DeactivateEnemies()
     {
         foreach (Enemy enemy in enemies)
         {
@@ -211,33 +131,45 @@ public class RoomController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Moves the camera smoothly to the room's position.
+    /// </summary>
+    void MoveCameraToRoom()
+    {
+        Vector3 offset = new Vector3(-0.49f, -0.5f, 0);
+        StartCoroutine(SmoothCameraTransition(offset));
+    }
 
     /// <summary>
-    /// Activates or deactivates doors based on the direction and whether adjacent rooms exist.
+    /// Coroutine for moving the camera.
     /// </summary>
-    /// <param name="direction">The direction of the door to activate (e.g., "Up", "Down").</param>
-    /// <param name="isActive">Whether to activate or deactivate the door.</param>
-    public void SetDoorActive(string direction, bool isActive)
+    IEnumerator SmoothCameraTransition(Vector3 offset)
     {
-        foreach (GameObject door in doors)
+        Vector3 startPos = mainCamera.transform.position;
+        Vector3 endPos = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z) + offset; 
+        float elapsedTime = 0f;
+
+        while (elapsedTime < cameraTransitionDuration)
         {
-            if (door.name.Contains(direction))
-            {
-                door.SetActive(isActive);
-            }
+            mainCamera.transform.position = Vector3.Lerp(startPos, endPos, elapsedTime / cameraTransitionDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
         }
 
-        foreach (GameObject doorGapCollider in doorGapColliders)
-        {
-            if (doorGapCollider.name.Contains(direction))
-            {
-                Collider2D collider = doorGapCollider.GetComponent<Collider2D>();
-                if (collider != null)
-                {
-                    collider.enabled = !isActive; 
-                }
-            }
-        }
+        mainCamera.transform.position = endPos;
+    }
+
+
+    /// <summary>
+    /// Sets the state of all doors in the room.
+    /// </summary>
+    /// <param name="state">The state to set: "open", "closed", or "none".</param>
+    private void SetAllDoorsState(string state)
+    {
+        doorTop?.SetDoorState(state);
+        doorBottom?.SetDoorState(state);
+        doorLeft?.SetDoorState(state);
+        doorRight?.SetDoorState(state);
     }
 
 

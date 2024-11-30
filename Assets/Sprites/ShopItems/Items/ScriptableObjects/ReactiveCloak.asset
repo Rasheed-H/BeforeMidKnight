@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f8af6f7a1ce1a14a99f53e635a0ceea, type: 3}
+  m_Name: ReactiveCloak
+  m_EditorClassIdentifier: 
+  itemName: Reactive Cloak
+  itemSprite: {fileID: 21300000, guid: a4d54846125e91844bf8346dbb7a2e2d, type: 3}
+  itemDescription: '+4s invincibility duration upon taking damage.\n\nSpecial: Blue
+    Cloak (does nothing)'
+  itemPrice: 300
+  itemRarity: mythical
+  statModifiers:
+  - statName: playerInvincibilityDuration
+    value: 3
+  specialEffects:
+  - CoolBlueCloak
