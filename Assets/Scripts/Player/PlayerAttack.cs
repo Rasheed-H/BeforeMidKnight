@@ -29,7 +29,6 @@ public class PlayerAttack : MonoBehaviour
     public AudioClip slashSound;
     public AudioClip daggerThrowSound;
 
-    private AudioSource audioSource;
     private Animator animator;
 
     public Collider2D AttackUpHitbox;
@@ -39,7 +38,6 @@ public class PlayerAttack : MonoBehaviour
 
     private void Awake()
     {
-        audioSource = GetComponentInParent<AudioSource>();
         animator = GetComponentInParent<Animator>();
     }
 
@@ -66,7 +64,7 @@ public class PlayerAttack : MonoBehaviour
             DisableAllHitboxes();
             hitbox.enabled = true;
             animator.SetTrigger(animationTrigger);
-            audioSource.PlayOneShot(slashSound);
+            SoundEffects.Instance.PlaySound(slashSound);
         }
         else if (currentWeapon == WeaponType.Dagger && Time.time > lastDaggerTime + daggerCooldown)
         {
@@ -81,7 +79,12 @@ public class PlayerAttack : MonoBehaviour
         GameObject dagger = Instantiate(daggerProjectilePrefab, transform.position, Quaternion.identity);
         Rigidbody2D rb = dagger.GetComponent<Rigidbody2D>();
         rb.velocity = direction.normalized * daggerProjectileSpeed;
-        audioSource.PlayOneShot(daggerThrowSound);
+        DaggerProjectile daggerProjectile = dagger.GetComponent<DaggerProjectile>();
+        if (daggerProjectile != null)
+        {
+            daggerProjectile.damage = daggerDamage;
+        }
+        SoundEffects.Instance.PlaySound(daggerThrowSound);
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         dagger.transform.rotation = Quaternion.Euler(0, 0, angle);
     }

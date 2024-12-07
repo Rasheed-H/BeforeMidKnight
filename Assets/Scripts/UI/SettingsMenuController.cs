@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SettingsMenuController : MonoBehaviour
@@ -5,38 +6,30 @@ public class SettingsMenuController : MonoBehaviour
     [Header("Settings Menu Components")]
     public GameObject SettingsMenu;
     public GameObject SettingsOptions;
-    public GameObject KeyboardSettings;
-    public GameObject GamepadSettings;
+    public GameObject ControlsSettings;
     public GameObject AudioSettings;
+    private int page = 0;
 
     /// <summary>
     /// Enables the Settings Menu.
     /// </summary>
     public void SettingsMenuPressed()
     {
+        page = 1;
         SettingsMenu.SetActive(true);
         SettingsOptions.SetActive(true);
-        KeyboardSettings.SetActive(false);
-        GamepadSettings.SetActive(false);
+        ControlsSettings.SetActive(false);
         AudioSettings.SetActive(false);
     }
 
     /// <summary>
     /// Enables Keyboard Settings and disables Settings Options.
     /// </summary>
-    public void KeyboardSettingsPressed()
+    public void ControlsSettingsPressed()
     {
+        page = 2;
         SettingsOptions.SetActive(false);
-        KeyboardSettings.SetActive(true);
-    }
-
-    /// <summary>
-    /// Enables Gamepad Settings and disables Settings Options.
-    /// </summary>
-    public void GamepadSettingsPressed()
-    {
-        SettingsOptions.SetActive(false);
-        GamepadSettings.SetActive(true);
+        ControlsSettings.SetActive(true);
     }
 
     /// <summary>
@@ -44,6 +37,7 @@ public class SettingsMenuController : MonoBehaviour
     /// </summary>
     public void AudioSettingsPressed()
     {
+        page = 2;
         SettingsOptions.SetActive(false);
         AudioSettings.SetActive(true);
     }
@@ -53,8 +47,20 @@ public class SettingsMenuController : MonoBehaviour
     /// </summary>
     public void BackButtonPressed()
     {
-        KeyboardSettings.SetActive(false);
-        GamepadSettings.SetActive(false);
+        if (page == 2)
+        {
+            SettingsBack();
+        }
+        else
+        {
+            SettingsClose();
+        }
+    }
+
+    public void SettingsBack()
+    {
+        page = 1;
+        ControlsSettings.SetActive(false);
         AudioSettings.SetActive(false);
         SettingsOptions.SetActive(true);
     }
@@ -62,7 +68,7 @@ public class SettingsMenuController : MonoBehaviour
     /// <summary>
     /// Closes the Settings Menu.
     /// </summary>
-    public void CloseButtonPressed()
+    public void SettingsClose()
     {
         SettingsMenu.SetActive(false);
     }

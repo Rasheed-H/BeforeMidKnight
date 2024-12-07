@@ -52,7 +52,7 @@ public class Arrow : MonoBehaviour
 
             Destroy(gameObject); 
         }
-        else if (collision.CompareTag("Wall") || collision.CompareTag("Slash"))
+        else if (collision.CompareTag("Wall"))
         {
             Destroy(gameObject); 
         }

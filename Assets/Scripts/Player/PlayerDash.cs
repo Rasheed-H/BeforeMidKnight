@@ -57,16 +57,13 @@ public class PlayerDash : MonoBehaviour
         player.isInvincible = true;
         dashHitbox.enabled = true;
         dashTrail.emitting = true;
-        audioSource.PlayOneShot(dashSound);
+        SoundEffects.Instance.PlaySound(dashSound);
 
         float dashDuration = dashDistance / dashSpeed;
         float elapsedTime = 0f;
         Vector2 dashVelocity = dashDirection * dashSpeed;
 
-        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Goblin"), true);
-        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Skeleton"), true);
-        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Ghast"), true);
-        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("EnemyProjectile"), true);
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), true);
 
         while (elapsedTime < dashDuration)
         {
@@ -81,10 +78,7 @@ public class PlayerDash : MonoBehaviour
         player.isInvincible = false;
         isDashing = false;
 
-        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Goblin"), false);
-        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Skeleton"), false);
-        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Ghast"), false);
-        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("EnemyProjectile"), false);
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -94,9 +88,22 @@ public class PlayerDash : MonoBehaviour
             Enemy enemy = collision.GetComponent<Enemy>();
             if (enemy != null)
             {
+                if (GameManager.Instance.IsSpecialEffectActive("KillingBlow") && enemy.currentHealth - dashDamage <= 0)
+                {
+                    ResetCooldown();
+                    Debug.Log("Killing Blow Activated: Dash Reset");
+                }
+
                 enemy.TakeDamage(dashDamage);
-                Debug.Log("Enemy hit by dash! Damage applied: " + dashDamage);
+                
             }
         }
+    }
+
+    public void ResetCooldown()
+    {
+        lastDashTime = -Mathf.Infinity; 
+        dashCooldownUI.ResetCooldownUI(); 
+        Debug.Log("Dash cooldown reset due to KillingBlow effect.");
     }
 }

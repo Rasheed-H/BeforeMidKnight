@@ -28,7 +28,7 @@ public class GameOverMenuController : MonoBehaviour
 
         // Calculate total kills from various enemies
         totalKills = GameManager.Instance.goblinKills + GameManager.Instance.skeletonKills +
-                     GameManager.Instance.spiderKills + GameManager.Instance.wizardKills + GameManager.Instance.bossKills;
+                     GameManager.Instance.ghastKills + GameManager.Instance.wizardKills + GameManager.Instance.demonKills;
 
         UpdateText();
     }
@@ -73,9 +73,9 @@ public class GameOverMenuController : MonoBehaviour
             totalKills,
             GameManager.Instance.goblinKills,
             GameManager.Instance.skeletonKills,
-            GameManager.Instance.spiderKills,
+            GameManager.Instance.ghastKills,
             GameManager.Instance.wizardKills,
-            GameManager.Instance.bossKills
+            GameManager.Instance.demonKills
         );
 
         // Reset the game state and return to the main menu

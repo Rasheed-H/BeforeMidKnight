@@ -16,9 +16,12 @@ public class Enemy : MonoBehaviour
     
     [SerializeField] protected float speed = 1f;       
     [SerializeField] protected int damage = 1;         
-    [SerializeField] protected int maxHealth = 1;      
+    [SerializeField] protected int maxHealth = 1;
 
-    protected int currentHealth;
+    [Header("Visual Effects")]
+    [SerializeField] private GameObject activationParticlePrefab; 
+
+    public int currentHealth;
     protected bool isActive = false;
     protected bool isDefeated = false;
     protected RoomController roomController;           
@@ -64,6 +67,12 @@ public class Enemy : MonoBehaviour
     {
         isActive = true;
         gameObject.SetActive(true);
+
+        if (activationParticlePrefab != null)
+        {
+            Vector3 spawnPosition = transform.position + new Vector3(0, -0.5f, 0); // Move down by 0.5 units
+            Instantiate(activationParticlePrefab, spawnPosition, Quaternion.identity);
+        }
     }
 
 

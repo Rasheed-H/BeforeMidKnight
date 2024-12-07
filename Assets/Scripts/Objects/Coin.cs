@@ -13,9 +13,8 @@ public class Coin : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            HUDController hudController = FindObjectOfType<HUDController>();
             GameManager.Instance.AddCoins(value);
-            hudController.UpdateCoinText();
+            UIController.Instance.UpdateCoinText();
             Destroy(gameObject);  
         }
     }

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7092064140484408441}
   m_Layer: 6
   m_Name: RoomShell
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1750,7 +1750,7 @@ GameObject:
   - component: {fileID: 8765492197687294011}
   m_Layer: 6
   m_Name: Grid
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2301,7 +2301,6 @@ GameObject:
   - component: {fileID: 2774665373381843923}
   - component: {fileID: 2229730748995913694}
   - component: {fileID: 9007497588686354452}
-  - component: {fileID: 3481361825063762055}
   m_Layer: 6
   m_Name: TreasureRoom
   m_TagString: Untagged
@@ -2409,102 +2408,6 @@ MonoBehaviour:
   minEnemies: 1
   maxEnemies: 5
   spawnedEnemies: []
---- !u!82 &3481361825063762055
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1250098762128010751}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 0.02
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 200
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1 &1382141904271332457
 GameObject:
   m_ObjectHideFlags: 0
@@ -3025,7 +2928,7 @@ GameObject:
   - component: {fileID: 7026058690826387807}
   m_Layer: 6
   m_Name: NoDoor
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4103,7 +4006,7 @@ GameObject:
   - component: {fileID: 324967394507565231}
   m_Layer: 6
   m_Name: DoorOpen
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4227,7 +4130,7 @@ GameObject:
   - component: {fileID: 2640008056017920963}
   m_Layer: 6
   m_Name: DoorLeft
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4785,7 +4688,7 @@ GameObject:
   - component: {fileID: 5837062092653255567}
   m_Layer: 6
   m_Name: DoorClosed
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5864,7 +5767,7 @@ GameObject:
   - component: {fileID: 5380086804065541253}
   m_Layer: 6
   m_Name: NoDoor
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6436,7 +6339,7 @@ GameObject:
   - component: {fileID: 6694777788580053044}
   m_Layer: 6
   m_Name: DoorOpen
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6562,7 +6465,7 @@ GameObject:
   - component: {fileID: 5867034207878937447}
   m_Layer: 6
   m_Name: DoorClosed
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10427,7 +10330,7 @@ GameObject:
   - component: {fileID: 2276919226025020231}
   m_Layer: 6
   m_Name: DoorOpen
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10591,7 +10494,7 @@ GameObject:
   - component: {fileID: 65563106793023947}
   m_Layer: 6
   m_Name: DoorClosed
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11164,7 +11067,7 @@ GameObject:
   - component: {fileID: 6748089037578025338}
   m_Layer: 6
   m_Name: NoDoor
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11735,7 +11638,7 @@ GameObject:
   - component: {fileID: 6475632630504936078}
   m_Layer: 6
   m_Name: DoorBottom
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11786,7 +11689,7 @@ GameObject:
   - component: {fileID: 5759367040001039536}
   m_Layer: 6
   m_Name: DoorOpen
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11910,7 +11813,7 @@ GameObject:
   - component: {fileID: 5357826455505317719}
   m_Layer: 6
   m_Name: DoorRight
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11960,7 +11863,7 @@ GameObject:
   - component: {fileID: 9181669891871081617}
   m_Layer: 6
   m_Name: DoorTop
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12518,7 +12421,7 @@ GameObject:
   - component: {fileID: 5912277747589454262}
   m_Layer: 6
   m_Name: DoorClosed
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13091,7 +12994,7 @@ GameObject:
   - component: {fileID: 7419993320689531958}
   m_Layer: 6
   m_Name: NoDoor
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

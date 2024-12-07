@@ -3,13 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// Controls room behaviors including managing doors, enemies, and camera transitions. 
+/// Controls room behaviors including managing doors, enemies, objects, and camera transitions. 
 /// It handles room state when the player enters and exits a room, including locking doors 
 /// if enemies are present and unlocking them when all enemies are defeated.
 /// </summary>
 public class RoomController : MonoBehaviour
 {
-
     private AudioSource audioSource;
     private Camera mainCamera;
     public float cameraTransitionDuration = 0.5f;
@@ -19,18 +18,23 @@ public class RoomController : MonoBehaviour
     public DoorController doorLeft;
     public DoorController doorRight;
 
-    private List<Enemy> enemies = new List<Enemy>();
+    private RoomContent roomContent;
 
     /// <summary>
     /// Called when the room controller is initialized. 
-    /// Sets up the camera and audio source references.
+    /// Sets up the camera, audio source, and room content references.
     /// </summary>
     void Awake()
     {
         mainCamera = Camera.main;
         audioSource = GetComponent<AudioSource>();
-    }
+        roomContent = GetComponent<RoomContent>();
 
+        if (roomContent == null)
+        {
+            Debug.LogError("RoomContent script is missing from this room!");
+        }
+    }
 
     /// <summary>
     /// Called when the player enters the room.
@@ -41,7 +45,7 @@ public class RoomController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             MoveCameraToRoom();
-            ActivateEnemies();
+            ActivateContent();
 
             if (AreEnemiesAlive())
             {
@@ -62,17 +66,51 @@ public class RoomController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            DeactivateEnemies();
+            DeactivateContent();
+            SetAllDoorsState("open");
         }
     }
 
     /// <summary>
-    /// Registers the enemies in the room.
+    /// Activates all room content, including objects and enemies.
+    /// Enemies are activated with a delay between activations.
     /// </summary>
-    /// <param name="roomEnemies">List of enemies to register.</param>
-    public void RegisterEnemies(List<Enemy> roomEnemies)
+    private void ActivateContent()
     {
-        enemies.AddRange(roomEnemies);
+        if (roomContent != null)
+        {
+            roomContent.ActivateContent();
+        }
+    }
+
+    /// <summary>
+    /// Deactivates all room content, including objects and enemies.
+    /// </summary>
+    private void DeactivateContent()
+    {
+        if (roomContent != null)
+        {
+            roomContent.DeactivateContent();
+        }
+    }
+
+    /// <summary>
+    /// Checks if any enemies in the room are still alive.
+    /// </summary>
+    /// <returns>True if enemies are alive, false otherwise.</returns>
+    private bool AreEnemiesAlive()
+    {
+        if (roomContent == null) return false;
+
+        foreach (Enemy enemy in roomContent.GetEnemies())
+        {
+            if (enemy != null && !enemy.IsDefeated())
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -84,50 +122,6 @@ public class RoomController : MonoBehaviour
         if (!AreEnemiesAlive())
         {
             SetAllDoorsState("open");
-        }
-    }
-
-    /// <summary>
-    /// Checks if any enemies in the room are still alive.
-    /// </summary>
-    /// <returns>True if enemies are alive, false otherwise.</returns>
-    private bool AreEnemiesAlive()
-    {
-        foreach (Enemy enemy in enemies)
-        {
-            if (enemy != null && !enemy.IsDefeated())
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /// <summary>
-    /// Activates all enemies in the room.
-    /// </summary>
-    private void ActivateEnemies()
-    {
-        foreach (Enemy enemy in enemies)
-        {
-            if (enemy != null && !enemy.IsDefeated())
-            {
-                enemy.Activate();
-            }
-        }
-    }
-
-    /// <summary>
-    /// Deactivates all enemies in the room.
-    /// </summary>
-    private void DeactivateEnemies()
-    {
-        foreach (Enemy enemy in enemies)
-        {
-            if (enemy != null && !enemy.IsDefeated())
-            {
-                enemy.Deactivate();
-            }
         }
     }
 
@@ -146,7 +140,7 @@ public class RoomController : MonoBehaviour
     IEnumerator SmoothCameraTransition(Vector3 offset)
     {
         Vector3 startPos = mainCamera.transform.position;
-        Vector3 endPos = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z) + offset; 
+        Vector3 endPos = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z) + offset;
         float elapsedTime = 0f;
 
         while (elapsedTime < cameraTransitionDuration)
@@ -159,7 +153,6 @@ public class RoomController : MonoBehaviour
         mainCamera.transform.position = endPos;
     }
 
-
     /// <summary>
     /// Sets the state of all doors in the room.
     /// </summary>
@@ -170,18 +163,5 @@ public class RoomController : MonoBehaviour
         doorBottom?.SetDoorState(state);
         doorLeft?.SetDoorState(state);
         doorRight?.SetDoorState(state);
-    }
-
-
-    /// <summary>
-    /// Plays a sound clip using the room's audio source.
-    /// </summary>
-    /// <param name="clip">The audio clip to play.</param>
-    public void PlaySound(AudioClip clip)
-    {
-        if (audioSource != null && clip != null)
-        {
-            audioSource.PlayOneShot(clip); 
-        }
     }
 }

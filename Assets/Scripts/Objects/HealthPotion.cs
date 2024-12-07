@@ -11,7 +11,7 @@ public class HealthPotion : MonoBehaviour
 
         if (collision.CompareTag("Player"))
         {
-            PlayerController player = collision.GetComponent<PlayerController>();
+            Player player = collision.GetComponent<Player>();
 
             if (player != null)
             {

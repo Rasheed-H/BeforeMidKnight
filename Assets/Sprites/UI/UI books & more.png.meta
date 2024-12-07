@@ -328,7 +328,7 @@ TextureImporter:
         width: 15
         height: 12
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -336,6 +336,27 @@ TextureImporter:
       bones: []
       spriteID: d3b954b4271b60643907ac750f613df8
       internalID: 954173500
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SettingsPage
+      rect:
+        serializedVersion: 2
+        x: 656
+        y: 400
+        width: 48
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 1}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1fedc7a372b5f3468fc181697da2407
+      internalID: 1769912663
       vertices: []
       indices: 
       edges: []
@@ -352,6 +373,7 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       Back: 954173500
+      SettingsPage: 1769912663
       container1: -256332798
       container2: 1524338986
       container3: -275357089

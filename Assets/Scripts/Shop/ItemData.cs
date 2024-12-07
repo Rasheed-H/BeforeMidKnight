@@ -6,6 +6,7 @@ public class ItemData : ScriptableObject
 {
     public string itemName;
     public Sprite itemSprite;
+    [TextArea(3, 10)]
     public string itemDescription;
     public int itemPrice;
     public string itemRarity;

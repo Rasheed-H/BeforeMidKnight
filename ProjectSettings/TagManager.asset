@@ -10,6 +10,10 @@ TagManager:
   - Dash
   - Wall
   - Chest
+  - EnemyProjectile
+  - Spike
+  - Box
+  - FxTemporaire
   layers:
   - Default
   - TransparentFX
@@ -23,13 +27,13 @@ TagManager:
   - AttackHitbox
   - Collectable
   - Object
-  - Goblin
-  - Skeleton
-  - Ghast
+  - EnemyPhysicsHitbox
+  - FlyingEnemy
+  - FlyingPhysics
   - DaggerHitbox
   - DashHitbox
-  - Wizard
-  - Demon
+  - Ground
+  - Air
   - 
   - 
   - 

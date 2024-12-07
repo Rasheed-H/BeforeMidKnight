@@ -11,17 +11,24 @@ public class Goblin : Enemy
     public AudioClip deathSound;
     private Vector2 movementDirection;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        speed = GameManager.Instance.goblinSpeed;
+        maxHealth = GameManager.Instance.goblinHealth;
+        currentHealth = maxHealth;
+    }
 
     /// <summary>
     /// Called every frame to update the Goblin's behavior. If the Goblin is active and not defeated, 
     /// it moves towards the player.
     /// </summary>
-    protected void Update() 
+    protected void Update()
     {
         if (!isActive || isDefeated)
             return;
 
-        MoveTowardsPlayer(); 
+        MoveTowardsPlayer();
     }
 
 
@@ -69,7 +76,7 @@ public class Goblin : Enemy
     /// Handles collision events for the Goblin. If the Goblin collides with the player, it deals damage to the player.
     /// </summary>
     /// <param name="collision">The Collision2D object representing the collision.</param>
-    void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (!isActive || isDefeated)
             return;
@@ -79,7 +86,7 @@ public class Goblin : Enemy
             Player player = collision.gameObject.GetComponent<Player>();
             if (player != null)
             {
-                player.TakeDamage(damage); 
+                player.TakeDamage(damage); // The player script will handle invincibility frames
             }
         }
     }
@@ -92,8 +99,8 @@ public class Goblin : Enemy
     /// <param name="damageAmount">The amount of damage to apply to the Goblin.</param>
     public override void TakeDamage(int damageAmount)
     {
-        base.TakeDamage(damageAmount); 
-        roomController.PlaySound(takeDamageSound);
+        base.TakeDamage(damageAmount);
+        SoundEffects.Instance.PlaySound(takeDamageSound);
     }
 
 
@@ -103,7 +110,7 @@ public class Goblin : Enemy
     /// </summary>
     protected override void Defeat()
     {
-        base.Defeat(); 
-        roomController.PlaySound(deathSound);
+        base.Defeat();
+        SoundEffects.Instance.PlaySound(deathSound);
     }
 }

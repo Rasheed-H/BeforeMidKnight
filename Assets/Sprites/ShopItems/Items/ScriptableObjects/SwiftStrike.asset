@@ -14,12 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Swift Strike
   itemSprite: {fileID: 21300000, guid: 7c96825454343dc4eaae2f808ed0dc98, type: 3}
-  itemDescription: -1.5s slash cooldown\n\n+4 slash damage
+  itemDescription: '-1s slash cooldown\n\n+2 slash damage\n\nSpecial: <b>Shot Slayer</b>\nSlash
+    attack destroys enemy projectiles.'
   itemPrice: 90
   itemRarity: rare
   statModifiers:
   - statName: slashCooldown
-    value: -1.5
+    value: -1
   - statName: slashDamage
-    value: 3.5
-  specialEffects: []
+    value: 15
+  specialEffects:
+  - ShotSlayer

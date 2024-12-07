@@ -87,7 +87,7 @@ public class AbilityCooldownDisplay : MonoBehaviour
     /// <summary>
     /// Resets the cooldown UI elements to their default states when the cooldown finishes.
     /// </summary>
-    private void ResetCooldownUI()
+    public void ResetCooldownUI()
     {
         isCooldownActive = false;
         textCooldown.gameObject.SetActive(false);

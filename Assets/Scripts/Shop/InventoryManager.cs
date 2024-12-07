@@ -138,6 +138,9 @@ public class InventoryManager : MonoBehaviour
     /// <summary>
     /// Equips the selected item and updates stats.
     /// </summary>
+    /// <summary>
+    /// Equips the selected item, updates stats, and adds special effects.
+    /// </summary>
     public void EquipSelectedItem()
     {
         if (selectedItem == null) return;
@@ -150,19 +153,26 @@ public class InventoryManager : MonoBehaviour
 
         GameManager.Instance.equippedItems.Add(selectedItem.itemName);
 
+        // Apply stat modifiers
         foreach (var modifier in selectedItem.statModifiers)
         {
             GameManager.Instance.ModifyStat(modifier.statName, modifier.value);
         }
 
+        // Add special effects
+        foreach (var effect in selectedItem.specialEffects)
+        {
+            GameManager.Instance.AddSpecialEffect(effect);
+        }
+
         GameManager.Instance.SaveGameState();
 
         RefreshUI();
-        UpdateItemInfo(selectedItem); 
+        UpdateItemInfo(selectedItem);
     }
 
     /// <summary>
-    /// Unequips the selected item and updates stats.
+    /// Unequips the selected item, updates stats, and removes special effects.
     /// </summary>
     public void UnequipSelectedItem()
     {
@@ -170,15 +180,22 @@ public class InventoryManager : MonoBehaviour
 
         GameManager.Instance.equippedItems.Remove(selectedItem.itemName);
 
+        // Revert stat modifiers
         foreach (var modifier in selectedItem.statModifiers)
         {
             GameManager.Instance.ModifyStat(modifier.statName, -modifier.value);
         }
 
+        // Remove special effects
+        foreach (var effect in selectedItem.specialEffects)
+        {
+            GameManager.Instance.RemoveSpecialEffect(effect);
+        }
+
         GameManager.Instance.SaveGameState();
 
         RefreshUI();
-        UpdateItemInfo(selectedItem); 
+        UpdateItemInfo(selectedItem);
     }
 
     public void OpenInventoryMenu()

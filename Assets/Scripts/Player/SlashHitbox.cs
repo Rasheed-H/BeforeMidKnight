@@ -30,5 +30,9 @@ public class SlashHitbox : MonoBehaviour
                 Debug.Log("Enemy hit by slash! Damage applied: " + playerAttack.slashDamage);
             }
         }
+        else if (collision.CompareTag("EnemyProjectile") && GameManager.Instance.IsSpecialEffectActive("ShotSlayer"))
+        {
+            Destroy(collision.gameObject);
+        }
     }
 }

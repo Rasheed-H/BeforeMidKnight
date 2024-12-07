@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f8af6f7a1ce1a14a99f53e635a0ceea, type: 3}
+  m_Name: HolyCoinPouch
+  m_EditorClassIdentifier: 
+  itemName: HolyCoinPouch
+  itemSprite: {fileID: 21300000, guid: 66a41db7ac5f3f6419554dbed8295163, type: 3}
+  itemDescription: 'Special: <b>Death Depositor</b>\n40% of your coins collected
+    will be desposited upon dying.'
+  itemPrice: 500
+  itemRarity: mythical
+  statModifiers: []
+  specialEffects:
+  - DeathDepositor

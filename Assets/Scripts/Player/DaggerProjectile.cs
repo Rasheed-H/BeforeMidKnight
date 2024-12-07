@@ -36,7 +36,7 @@ public class DaggerProjectile : MonoBehaviour
             }
             Destroy(gameObject);
         }
-        else if (collision.CompareTag("Wall"))
+        else if (collision.CompareTag("Wall") || collision.CompareTag("Box"))
         {
             Destroy(gameObject);
         }

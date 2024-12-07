@@ -38,7 +38,7 @@ public class DemonScythe : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+            Player player = collision.gameObject.GetComponent<Player>();
             if (player != null)
             {
                 player.TakeDamage(1); 

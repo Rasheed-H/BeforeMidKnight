@@ -29,6 +29,14 @@ public class Skeleton : Enemy
     private bool isFleeTimerActive = false;
     private float fleeCooldownTimer = 0f;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        fireRate = GameManager.Instance.skeletonFireRate;
+        maxHealth = GameManager.Instance.skeletonHealth;
+        currentHealth = maxHealth;
+    }
+
     /// <summary>
     /// Updates the skeleton's state every frame. 
     /// Handles movement, shooting, and fleeing behavior based on player distance and timers.
@@ -165,7 +173,7 @@ public class Skeleton : Enemy
     /// </summary>
     public void FireArrow()
     {
-        roomController.PlaySound(shootSound);
+        SoundEffects.Instance.PlaySound(shootSound);
         GameObject arrow = Instantiate(arrowPrefab, arrowSpawnPoint.position, Quaternion.identity);
         Vector2 direction = (playerTransform.position - arrowSpawnPoint.position).normalized;
         Rigidbody2D arrowRb = arrow.GetComponent<Rigidbody2D>();
@@ -183,7 +191,7 @@ public class Skeleton : Enemy
     public override void TakeDamage(int damageAmount)
     {
         base.TakeDamage(damageAmount);
-        roomController.PlaySound(takeDamageSound);
+        SoundEffects.Instance.PlaySound(takeDamageSound);
     }
 
     /// <summary>
@@ -192,6 +200,6 @@ public class Skeleton : Enemy
     protected override void Defeat()
     {
         base.Defeat();
-        roomController.PlaySound(deathSound);
+        SoundEffects.Instance.PlaySound(deathSound);
     }
 }

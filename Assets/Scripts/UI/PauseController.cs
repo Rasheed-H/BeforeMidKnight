@@ -9,7 +9,7 @@ using UnityEngine;
 public class PauseController : MonoBehaviour
 {
     public GameObject pauseMenuUI;
-    public PlayerController playerController;
+    public Player player;
     private bool isPaused = false;
 
     private PlayerInputActions playerInputActions;

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4519597100826939121}
   - component: {fileID: 1656814079392182630}
   - component: {fileID: 9035716723341447783}
-  m_Layer: 17
+  m_Layer: 3
   m_Name: Wizard
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -35,6 +35,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1291017875510978447}
+  - {fileID: 6323938385611885028}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1946658161456843796
@@ -118,7 +119,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.00796026, y: -0.43382436}
@@ -175,7 +176,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1
   damage: 1
-  maxHealth: 1
+  maxHealth: 30
+  activationParticlePrefab: {fileID: 1546897667432260974, guid: 9b36c7948438463469d1fb33b246f6eb, type: 3}
+  currentHealth: 0
   itemDrops:
   - itemPrefab: {fileID: 817110022888878364, guid: c930648ccbdd52f48b4bd6a8edc7314f, type: 3}
     dropChance: 20
@@ -189,11 +192,13 @@ MonoBehaviour:
     dropChance: 2
   - itemPrefab: {fileID: 6213545997103074257, guid: 6b6cf4c9a436a8547a5028388de7e8cd, type: 3}
     dropChance: 3
-  teleportSound: {fileID: 0}
+  teleportSound: {fileID: 8300000, guid: 87bbec48bcbacbc45aed76d5a7da8968, type: 3}
+  deathSound: {fileID: 8300000, guid: b4a40119f04847543b15598e5a4c1442, type: 3}
+  shootSound: {fileID: 8300000, guid: 3174ccb04a7ef134b901704e0fd5f05e, type: 3}
   book: {fileID: 6545621820545876022}
   blueBallPrefab: {fileID: 7394233946033036019, guid: ca81fda5ae87b984e9253b8434fa3fb1, type: 3}
   fireRate: 2
-  teleportEffectPrefab: {fileID: 681678719204003132, guid: 60b97c8a3b60f874280522e411809529, type: 3}
+  teleportEffectPrefab: {fileID: 1546897667432260974, guid: e65b334f568873344b7c278fbd4a5018, type: 3}
   damageFlashColor: {r: 1, g: 0.45, b: 0.45, a: 1}
 --- !u!95 &9035716723341447783
 Animator:
@@ -216,6 +221,73 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &2283556624138761498
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6323938385611885028}
+  - component: {fileID: 8960553486505761707}
+  m_Layer: 12
+  m_Name: Hitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6323938385611885028
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2283556624138761498}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2579041747253303565}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!70 &8960553486505761707
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2283556624138761498}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.009883702, y: -0.54360473}
+  m_Size: {x: 0.77674425, y: 0.9604652}
+  m_Direction: 0
 --- !u!1 &6545621820545876022
 GameObject:
   m_ObjectHideFlags: 0
@@ -227,7 +299,7 @@ GameObject:
   - component: {fileID: 1291017875510978447}
   - component: {fileID: 286469037489615147}
   - component: {fileID: 6973327685265589423}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Book
   m_TagString: Untagged
   m_Icon: {fileID: 0}

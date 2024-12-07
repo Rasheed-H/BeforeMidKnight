@@ -12,10 +12,8 @@ public class DoorController : MonoBehaviour
     /// <param name="state">The state to set: "open", "closed", or "none".</param>
     public void SetDoorState(string state)
     {
-        // If NoDoor is active, don't allow state changes
         if (noDoor.activeSelf)
         {
-            Debug.Log($"Door {gameObject.name} is set to NoDoor and cannot be changed.");
             return;
         }
 

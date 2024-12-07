@@ -69,26 +69,4 @@ public class GameMenuController : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-    public ItemData speedBoots;
-    /**
-    public void TestPurchase()
-    {
-        GameManager.Instance.PurchaseItem(speedBoots);
-        Debug.Log($"Purchased {speedBoots.itemName}. Coins remaining: {GameManager.Instance.coinsDeposited}");
-    }
-
-    // Equip the Speed Boots
-    public void TestEquip()
-    {
-        GameManager.Instance.EquipItem(speedBoots);
-        Debug.Log($"Equipped {speedBoots.itemName}. Current playerMoveSpeed: {GameManager.Instance.GetStat("playerMoveSpeed")}");
-    }
-
-    // Unequip the Speed Boots
-    public void TestUnequip()
-    {
-        GameManager.Instance.UnequipItem(speedBoots);
-        Debug.Log($"Unequipped {speedBoots.itemName}. Current playerMoveSpeed: {GameManager.Instance.GetStat("playerMoveSpeed")}");
-    }
-    **/
 }

@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Ghast : Enemy
 {
+    public AudioClip deathSound;
+    
     [Header("Ghast Behavior")]
     public float waitTime = 3f; 
     [SerializeField] private float stoppingDistance = 0.2f; 
@@ -17,10 +19,7 @@ public class Ghast : Enemy
     protected override void Awake()
     {
         base.Awake();
-        speed = 15f; 
-        damage = 2;
-        maxHealth = 1;
-        currentHealth = maxHealth;
+        waitTime = GameManager.Instance.ghastWaitTime;
     }
 
     private void Update()
@@ -138,7 +137,7 @@ public class Ghast : Enemy
     /// Handles collision events for the Ghast. Damages the player upon collision.
     /// </summary>
     /// <param name="collision">Collision object.</param>
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (!isActive || isDefeated)
             return;
@@ -158,6 +157,7 @@ public class Ghast : Enemy
     /// </summary>
     protected override void Defeat()
     {
-        base.Defeat(); 
+        base.Defeat();
+        SoundEffects.Instance.PlaySound(deathSound);
     }
 }

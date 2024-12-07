@@ -3,11 +3,12 @@ using UnityEngine;
 public class BlueBall : MonoBehaviour
 {
     public int damage = 1;
-    public float speed = 5f;
+    public float speed;
     public float lifespan = 5f;
 
     private void Start()
     {
+        speed = GameManager.Instance.wizardProjSpeed;
         Destroy(gameObject, lifespan); 
     }
 
@@ -22,7 +23,7 @@ public class BlueBall : MonoBehaviour
             }
             Destroy(gameObject); 
         }
-        else if (collision.CompareTag("Wall") || collision.CompareTag("Slash"))
+        else if (collision.CompareTag("Wall"))
         {
             Destroy(gameObject);
         }

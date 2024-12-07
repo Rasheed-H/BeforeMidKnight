@@ -16,20 +16,19 @@ public class Player : MonoBehaviour
 
     public PlayerAttack playerAttack;
 
+    public AudioClip playerDieSound;
+    public AudioClip playerHurtSound;
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D rb;
     private Animator animator;
-    private AudioSource audioSource;
 
     public HeartsManager heartsManager;
-    public DayOverScreenController dayOverScreenController;
 
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        audioSource = GetComponent<AudioSource>();
         currentHealth = maxHealth;
         heartsManager.InitializeHearts(maxHealth);
         heartsManager.UpdateHearts(currentHealth);
@@ -72,6 +71,7 @@ public class Player : MonoBehaviour
         }
         else
         {
+            SoundEffects.Instance.PlaySound(playerHurtSound);
             animator.SetTrigger("Hurt");
             StartCoroutine(InvincibilityCoroutine());
         }
@@ -110,15 +110,11 @@ public class Player : MonoBehaviour
     public void Die()
     {
         animator.SetTrigger("Die");
+        SoundEffects.Instance.PlaySound(playerDieSound);
         isAlive = false;
         rb.velocity = Vector2.zero;
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
-        dayOverScreenController.ShowDieScreen();
+        UIController.Instance.ShowDieScreen();
     }
 
-    public void Escape()
-    {
-        GameManager.Instance.Escaped();
-        dayOverScreenController.ShowEscapeScreen();
-    }
 }

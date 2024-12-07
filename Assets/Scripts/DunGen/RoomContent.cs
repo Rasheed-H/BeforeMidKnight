@@ -1,20 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 /// <summary>
-/// This script is responsible for spawning objects and enemies inside a room. It selects random objects
-/// and enemies from predefined arrays and positions them randomly within the room bounds. The enemies
-/// spawned are registered with the RoomController to manage room states.
+/// This script is responsible for spawning and managing objects and enemies inside a room. 
+/// It ensures that objects and enemies are activated and deactivated based on the player's presence in the room.
 /// </summary>
 public class RoomContent : MonoBehaviour
 {
     [Header("Objects Settings")]
-    public List<Spawnable> possibleObjects;  
+    public List<Spawnable> possibleObjects;
     public int minObjects = 1;
     public int maxObjects = 5;
 
     [Header("Enemies Settings")]
-    public List<Spawnable> possibleEnemies;  
+    public List<Spawnable> possibleEnemies;
     public int minEnemies = 1;
     public int maxEnemies = 5;
 
@@ -22,26 +22,23 @@ public class RoomContent : MonoBehaviour
     private float roomWidth = 25f;
     private float roomHeight = 15f;
 
-    public List<Enemy> spawnedEnemies = new List<Enemy>();
+    private List<GameObject> spawnedObjects = new List<GameObject>();
+    private List<Enemy> spawnedEnemies = new List<Enemy>();
+
 
     /// <summary>
-    /// Called when the scene starts. Spawns the objects and enemies in the room
-    /// and registers them with the RoomController.
+    /// Initializes and spawns objects and enemies in the room.
     /// </summary>
-    void Start()
+    private void Start()
     {
         SpawnObjects();
         SpawnEnemies();
-
-        RoomController roomController = GetComponent<RoomController>();
-        roomController.RegisterEnemies(spawnedEnemies);
     }
 
     /// <summary>
     /// Spawns a random number of objects in the room based on the min and max object count.
-    /// Objects are selected from the possibleObjects list with spawn chances.
     /// </summary>
-    void SpawnObjects()
+    private void SpawnObjects()
     {
         int objectCount = Random.Range(minObjects, maxObjects + 1);
 
@@ -51,17 +48,21 @@ public class RoomContent : MonoBehaviour
 
             if (objectToSpawn != null)
             {
-                Vector2 spawnPosition = GetRandomPositionInRoom();
-                Instantiate(objectToSpawn, spawnPosition, Quaternion.identity, transform);
+                Vector2 spawnPosition = GetRandomGroundPosition();
+                if (spawnPosition != Vector2.zero) 
+                {
+                    GameObject spawnedObject = Instantiate(objectToSpawn, spawnPosition, Quaternion.identity, transform);
+                    spawnedObject.SetActive(false); 
+                    spawnedObjects.Add(spawnedObject);
+                }
             }
         }
     }
 
     /// <summary>
     /// Spawns a random number of enemies in the room based on the min and max enemy count.
-    /// Enemies are selected from the possibleEnemies list with spawn chances.
     /// </summary>
-    void SpawnEnemies()
+    private void SpawnEnemies()
     {
         int enemyCount = Random.Range(minEnemies, maxEnemies + 1);
 
@@ -71,15 +72,73 @@ public class RoomContent : MonoBehaviour
 
             if (enemyToSpawn != null)
             {
-                Vector2 spawnPosition = GetRandomPositionInRoom();
-                GameObject spawnedEnemy = Instantiate(enemyToSpawn, spawnPosition, Quaternion.identity, transform);
-                spawnedEnemy.SetActive(false);
-
-                // Register the enemy in the list for the RoomController
-                Enemy enemyScript = spawnedEnemy.GetComponent<Enemy>();
-                if (enemyScript != null)
+                Vector2 spawnPosition = GetRandomGroundPosition();
+                if (spawnPosition != Vector2.zero) 
                 {
-                    spawnedEnemies.Add(enemyScript);
+                    GameObject spawnedEnemy = Instantiate(enemyToSpawn, spawnPosition, Quaternion.identity, transform);
+                    spawnedEnemy.SetActive(false); 
+
+                    // Register the enemy
+                    Enemy enemyScript = spawnedEnemy.GetComponent<Enemy>();
+                    if (enemyScript != null)
+                    {
+                        spawnedEnemies.Add(enemyScript);
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Activates all enemies and objects in the room.
+    /// </summary>
+    public void ActivateContent()
+    {
+        foreach (GameObject obj in spawnedObjects)
+        {
+            obj?.SetActive(true);
+        }
+
+        StartCoroutine(ActivateEnemiesWithDelay());
+    }
+
+    /// <summary>
+    /// Coroutine to activate enemies one by one with a delay.
+    /// </summary>
+    private IEnumerator ActivateEnemiesWithDelay()
+    {
+        yield return new WaitForSeconds(0.7f);
+
+        foreach (Enemy enemy in spawnedEnemies)
+        {
+            if (enemy != null && !enemy.IsDefeated())
+            {
+                yield return new WaitForSeconds(0.2f);
+                enemy.Activate();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Deactivates all enemies and objects in the room.
+    /// </summary>
+    public void DeactivateContent()
+    {
+        foreach (Enemy enemy in spawnedEnemies)
+        {
+            if (enemy != null && !enemy.IsDefeated())
+            {
+                enemy.Deactivate();
+            }
+        }
+
+        foreach (GameObject obj in spawnedObjects)
+        {
+            if (obj != null)
+            {
+                if (obj.CompareTag("Spike"))
+                {
+                    obj.SetActive(false); 
                 }
             }
         }
@@ -88,9 +147,7 @@ public class RoomContent : MonoBehaviour
     /// <summary>
     /// Returns a random GameObject from the list based on spawn chances.
     /// </summary>
-    /// <param name="spawnItems">List of spawn items with their spawn chances.</param>
-    /// <returns>The GameObject to spawn or null if none was chosen.</returns>
-    GameObject GetRandomSpawn(List<Spawnable> spawnItems)
+    private GameObject GetRandomSpawn(List<Spawnable> spawnItems)
     {
         float randomValue = Random.Range(0f, 100f);
         float cumulativeChance = 0f;
@@ -104,39 +161,60 @@ public class RoomContent : MonoBehaviour
             }
         }
 
-        return null; 
+        return null;
     }
 
     /// <summary>
-    /// Calculates and returns a random position within the room. The position is adjusted with margins
-    /// to ensure objects are not too close to the room's edges.
+    /// Calculates and returns a random position within the room on the Ground layer.
     /// </summary>
-    /// <returns>A random position within the room bounds as a Vector2.</returns>
-    Vector2 GetRandomPositionInRoom()
+    /// <returns>A random position within the room bounds as a Vector2, or Vector2.zero if no valid position is found.</returns>
+    private Vector2 GetRandomGroundPosition()
     {
-        float marginX = roomWidth * 0.15f;
-        float marginY = roomHeight * 0.15f;
+        int maxAttempts = 10;
 
-        float minX = transform.position.x - (roomWidth / 2) + marginX;
-        float maxX = transform.position.x + (roomWidth / 2) - marginX;
-        float minY = transform.position.y - (roomHeight / 2) + marginY;
-        float maxY = transform.position.y + (roomHeight / 2) - marginY;
+        for (int attempt = 0; attempt < maxAttempts; attempt++)
+        {
+            float marginX = roomWidth * 0.15f;
+            float marginY = roomHeight * 0.15f;
 
-        float x = Random.Range(minX, maxX);
-        float y = Random.Range(minY, maxY);
+            float minX = transform.position.x - (roomWidth / 2) + marginX;
+            float maxX = transform.position.x + (roomWidth / 2) - marginX;
+            float minY = transform.position.y - (roomHeight / 2) + marginY;
+            float maxY = transform.position.y + (roomHeight / 2) - marginY;
 
-        return new Vector2(x, y);
+            float x = Random.Range(minX, maxX);
+            float y = Random.Range(minY, maxY);
+
+            Vector2 position = new Vector2(x, y);
+
+            // Debugging
+            Debug.Log($"Checking position {position}");
+            Debug.Log($"On Ground: {Physics2D.OverlapPoint(position, LayerMask.GetMask("Ground"))}");
+            Debug.Log($"On Air: {Physics2D.OverlapPoint(position, LayerMask.GetMask("Air"))}");
+
+            if (Physics2D.OverlapPoint(position, LayerMask.GetMask("Ground")) &&
+                !Physics2D.OverlapPoint(position, LayerMask.GetMask("Air")))
+            {
+                return position;
+            }
+        }
+
+        return Vector2.zero;
     }
 
-    /// <summary>
-    /// Provides the bounds of the room as a Vector2.
-    /// X represents half of the room's width, and Y represents half of the room's height.
-    /// </summary>
     public Bounds GetRoomBounds()
     {
         Vector2 roomCenter = transform.position;
         Vector2 size = new Vector2(roomWidth, roomHeight);
         return new Bounds(roomCenter, size);
+    }
+
+    /// <summary>
+    /// Provides the list of spawned enemies for external use.
+    /// </summary>
+    public List<Enemy> GetEnemies()
+    {
+        return spawnedEnemies;
     }
 }
 
@@ -146,6 +224,8 @@ public class RoomContent : MonoBehaviour
 [System.Serializable]
 public class Spawnable
 {
-    public GameObject objectPrefab; 
-    public float spawnChance;      
+    public GameObject objectPrefab;
+    public float spawnChance;
 }
+
+

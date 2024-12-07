@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f8af6f7a1ce1a14a99f53e635a0ceea, type: 3}
+  m_Name: AppleOfLife
+  m_EditorClassIdentifier: 
+  itemName: Apple Of Life
+  itemSprite: {fileID: 21300000, guid: 6ad5154f977ea8d4e95c7e66e5f103d9, type: 3}
+  itemDescription: +2 Player Health (1 heart)
+  itemPrice: 70
+  itemRarity: common
+  statModifiers:
+  - statName: playerMaxHealth
+    value: 2
+  specialEffects: []
