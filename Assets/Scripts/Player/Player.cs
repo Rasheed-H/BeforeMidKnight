@@ -2,6 +2,10 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Handles the player's health, movement, attacks, and interactions with the game world.
+/// Manages player animations, invincibility after taking damage, and death behavior.
+/// </summary>
 public class Player : MonoBehaviour
 {
     public int maxHealth => (int)GameManager.Instance.GetStat("playerMaxHealth");
@@ -21,9 +25,14 @@ public class Player : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D rb;
     private Animator animator;
-
     public HeartsManager heartsManager;
 
+    [SerializeField] private AudioClip dieSound;
+
+
+    /// <summary>
+    /// Initializes the player's health, references, and special effects. Sets up hearts and handles visual changes based on special effects.
+    /// </summary>
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -32,15 +41,26 @@ public class Player : MonoBehaviour
         currentHealth = maxHealth;
         heartsManager.InitializeHearts(maxHealth);
         heartsManager.UpdateHearts(currentHealth);
+
+        if (GameManager.Instance.IsSpecialEffectActive("CoolBlueCloak"))
+        {
+            spriteRenderer.color = new Color32(20, 119, 255, 255); 
+        }
     }
 
+    /// <summary>
+    /// Updates the player's state each frame, including handling movement if the player is alive.
+    /// </summary>
     void Update()
     {
         if (!isAlive) return;
         HandleMovement();
     }
 
-
+    /// <summary>
+    /// Handles player movement based on input, updates the Rigidbody velocity,
+    /// and manages animations for movement and idle states.
+    /// </summary>
     private void HandleMovement()
     {
         moveInput = UserInput.Instance.MoveInput;
@@ -57,6 +77,10 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Reduces the player's health when taking damage. Triggers invincibility and hurt animations,
+    /// and handles death if health reaches zero.
+    /// </summary>
     public void TakeDamage(int damage)
     {
         if (!isAlive || isInvincible) return;
@@ -77,6 +101,9 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Enables invincibility for a set duration, making the player immune to further damage.
+    /// </summary>
     private IEnumerator InvincibilityCoroutine()
     {
         isInvincible = true;
@@ -85,6 +112,9 @@ public class Player : MonoBehaviour
         isInvincible = false;
     }
 
+    /// <summary>
+    /// Temporarily flashes the player's sprite to indicate invincibility after taking damage.
+    /// </summary>
     private IEnumerator FlashSprite()
     {
         while (isInvincible)
@@ -96,19 +126,31 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Disables all attack hitboxes. Called from animation event.
+    /// </summary>
     public void DisableAttackHitboxes()
     {
         playerAttack.DisableAllHitboxes();
     }
 
+    /// <summary>
+    /// Restores the player's health by a specified amount, ensuring it does not exceed the maximum health.
+    /// Updates the heart UI to reflect the new health.
+    /// </summary>
     public void Heal(int amount)
     {
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
         heartsManager.UpdateHearts(currentHealth);
     }
 
+    /// <summary>
+    /// Handles player death by triggering animations, disabling movement, freezing the player,
+    /// and showing the death screen.
+    /// </summary>
     public void Die()
     {
+        SoundEffects.Instance.PlaySound(dieSound);
         animator.SetTrigger("Die");
         SoundEffects.Instance.PlaySound(playerDieSound);
         isAlive = false;

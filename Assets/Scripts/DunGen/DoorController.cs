@@ -1,10 +1,14 @@
 using UnityEngine;
 
+/// <summary>
+/// Controls the state of a door in the dungeon. 
+/// A door can be open, closed, or non-existent (no door).
+/// </summary>
 public class DoorController : MonoBehaviour
 {
-    public GameObject doorOpen;    // Reference to the DoorOpen state GameObject
-    public GameObject doorClosed;  // Reference to the DoorClosed state GameObject
-    public GameObject noDoor;      // Reference to the NoDoor state GameObject
+    public GameObject doorOpen;   
+    public GameObject doorClosed; 
+    public GameObject noDoor;     
 
     /// <summary>
     /// Sets the door state to open, closed, or no door.
@@ -17,12 +21,10 @@ public class DoorController : MonoBehaviour
             return;
         }
 
-        // Deactivate all states first
         doorOpen.SetActive(false);
         doorClosed.SetActive(false);
         noDoor.SetActive(false);
 
-        // Activate the correct state
         switch (state.ToLower())
         {
             case "open":
@@ -38,7 +40,6 @@ public class DoorController : MonoBehaviour
                 break;
 
             default:
-                Debug.LogWarning($"Invalid door state '{state}' for {gameObject.name}. Setting to NoDoor.");
                 noDoor.SetActive(true);
                 break;
         }

@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 
+/// <summary>
+/// Manages the player's inventory, including equipping and unequipping items,
+/// updating item stats, and interacting with the inventory and equip slots UI.
+/// </summary>
 public class InventoryManager : MonoBehaviour
 {
     [Header("UI References")]
@@ -17,16 +21,19 @@ public class InventoryManager : MonoBehaviour
     private ItemData selectedItem; 
     private bool isEquippedItem; 
 
-    public GameObject inventoryMenuUI; 
+    public GameObject inventoryMenuUI;
 
+    [SerializeField] private AudioClip equipSound;
+    [SerializeField] private AudioClip unequipSound;
+    [SerializeField] private AudioClip deniedSound;
+    [SerializeField] private AudioClip buttonClickSound;
+
+
+    /// <summary>
+    /// Initializes the inventory manager, ensuring dependencies are set and the UI is updated.
+    /// </summary>
     private void Start()
     {
-        if (shopManager == null)
-        {
-            Debug.LogError("ShopManager reference is missing!");
-            return;
-        }
-
         RefreshUI();
         UpdateItemInfo(null); 
     }
@@ -96,6 +103,7 @@ public class InventoryManager : MonoBehaviour
     /// </summary>
     private void SelectItem(ItemData item)
     {
+        SoundEffects.Instance.PlaySound(buttonClickSound);
         selectedItem = item;
         isEquippedItem = GameManager.Instance.equippedItems.Contains(item.itemName);
 
@@ -138,28 +146,24 @@ public class InventoryManager : MonoBehaviour
     /// <summary>
     /// Equips the selected item and updates stats.
     /// </summary>
-    /// <summary>
-    /// Equips the selected item, updates stats, and adds special effects.
-    /// </summary>
     public void EquipSelectedItem()
     {
         if (selectedItem == null) return;
 
         if (GameManager.Instance.equippedItems.Count >= 6)
         {
-            Debug.LogWarning("Cannot equip more than 6 items.");
+            SoundEffects.Instance.PlaySound(deniedSound);
             return;
         }
 
         GameManager.Instance.equippedItems.Add(selectedItem.itemName);
+        SoundEffects.Instance.PlaySound(equipSound);
 
-        // Apply stat modifiers
         foreach (var modifier in selectedItem.statModifiers)
         {
             GameManager.Instance.ModifyStat(modifier.statName, modifier.value);
         }
 
-        // Add special effects
         foreach (var effect in selectedItem.specialEffects)
         {
             GameManager.Instance.AddSpecialEffect(effect);
@@ -179,14 +183,13 @@ public class InventoryManager : MonoBehaviour
         if (selectedItem == null) return;
 
         GameManager.Instance.equippedItems.Remove(selectedItem.itemName);
+        SoundEffects.Instance.PlaySound(unequipSound);
 
-        // Revert stat modifiers
         foreach (var modifier in selectedItem.statModifiers)
         {
             GameManager.Instance.ModifyStat(modifier.statName, -modifier.value);
         }
 
-        // Remove special effects
         foreach (var effect in selectedItem.specialEffects)
         {
             GameManager.Instance.RemoveSpecialEffect(effect);
@@ -198,12 +201,18 @@ public class InventoryManager : MonoBehaviour
         UpdateItemInfo(selectedItem);
     }
 
+    /// <summary>
+    /// Opens the inventory menu and refreshes the UI to reflect the current inventory state.
+    /// </summary>
     public void OpenInventoryMenu()
     {
         RefreshUI(); 
         inventoryMenuUI.SetActive(true);
     }
 
+    /// <summary>
+    /// Closes the inventory menu.
+    /// </summary>
     public void CloseInventoryMenu()
     {
         inventoryMenuUI.SetActive(false);

@@ -1,6 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Represents a wizard enemy with abilities to attack the player, teleport within its room,
+/// and react dynamically to damage. Handles attack animations, projectiles, and interactions with the game world.
+/// </summary>
 public class Wizard : Enemy
 {
     [Header("Wizard Properties")]
@@ -22,18 +26,21 @@ public class Wizard : Enemy
     private RoomContent roomContent;
     private float pushThreshold = 0.5f;
 
+    /// <summary>
+    /// Initializes the wizard's properties, setting its health based on the GameManager and obtaining the parent room content.
+    /// </summary>
     protected override void Awake()
     {
         base.Awake();
         maxHealth = GameManager.Instance.wizardHealth;
         currentHealth = maxHealth;
         roomContent = GetComponentInParent<RoomContent>();
-        if (roomContent == null)
-        {
-            Debug.LogError("RoomContent not found in Wizard's parent!");
-        }
     }
 
+    /// <summary>
+    /// Updates the wizard's behavior, including resetting velocity when pushed, aligning animations with the player's position,
+    /// and managing attack timing.
+    /// </summary>
     private void Update()
     {
         if (!isActive || isDefeated)
@@ -103,14 +110,14 @@ public class Wizard : Enemy
             }
             book.GetComponent<SpriteRenderer>().sortingOrder = 1; 
         }
-        else // Vertical
+        else 
         {
-            if (direction.y > 0) // Facing up
+            if (direction.y > 0) 
             {
                 book.transform.localPosition = new Vector3(0, 0, 0); 
                 book.GetComponent<SpriteRenderer>().sortingOrder = -1; 
             }
-            else // Facing down
+            else 
             {
                 book.transform.localPosition = new Vector3(0, -1f, 0); 
                 book.GetComponent<SpriteRenderer>().sortingOrder = 1; 
@@ -125,7 +132,6 @@ public class Wizard : Enemy
     {
         lastFireTime = Time.time;
 
-        // Play attack animations
         animator.SetTrigger("Shoot");
         book.GetComponent<Animator>().SetTrigger("Shoot");
     }
@@ -222,5 +228,6 @@ public class Wizard : Enemy
     {
         base.Defeat();
         SoundEffects.Instance.PlaySound(deathSound);
+        GameManager.Instance.IncrementKillCounter("wizard");
     }
 }

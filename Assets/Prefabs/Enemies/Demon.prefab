@@ -47,7 +47,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8704889275434858666
 Transform:
   m_ObjectHideFlags: 0
@@ -226,14 +226,18 @@ MonoBehaviour:
   maxHealth: 1
   activationParticlePrefab: {fileID: 1546897667432260974, guid: 9b36c7948438463469d1fb33b246f6eb, type: 3}
   currentHealth: 0
-  itemDrops: []
+  itemDrops:
+  - itemPrefab: {fileID: 817110022888878364, guid: 785c5cd331faec5478706fce5ff3b79a, type: 3}
+    dropChance: 20
+  - itemPrefab: {fileID: 817110022888878364, guid: 7a2dbff217f38cc41b41c475491b387b, type: 3}
+    dropChance: 10
   currentState: 0
-  idleDuration: 8
+  idleDuration: 6.5
   fireRate: 1
   shotsPerCycle: 3
   stoppingDistance: 0.2
   pauseTime: 1
-  chaseDuration: 8
+  chaseDuration: 6.5
   demonScythePrefab: {fileID: 2366749304806786574, guid: 6d0afb6c2780ec549977f890fa2afa30, type: 3}
   scytheSpawnPoint: {fileID: 4998311172567881897}
   portalPrefab: {fileID: 1941631446116707265, guid: f0e7f94868abcad4bbc54940d6e3b493, type: 3}
@@ -310,5 +314,5 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4

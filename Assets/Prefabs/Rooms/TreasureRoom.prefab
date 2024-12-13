@@ -2403,11 +2403,10 @@ MonoBehaviour:
   - objectPrefab: {fileID: 696528044583984677, guid: beeb30c8e81b4214594042f12c3b4ce7, type: 3}
     spawnChance: 100
   minObjects: 1
-  maxObjects: 3
+  maxObjects: 6
   possibleEnemies: []
-  minEnemies: 1
-  maxEnemies: 5
-  spawnedEnemies: []
+  minEnemies: 0
+  maxEnemies: 0
 --- !u!1 &1382141904271332457
 GameObject:
   m_ObjectHideFlags: 0
@@ -7541,7 +7540,8 @@ GameObject:
   - component: {fileID: 5952090393194497133}
   - component: {fileID: 7641941412187877633}
   - component: {fileID: 4738733141359252502}
-  m_Layer: 6
+  - component: {fileID: 6718366961786653242}
+  m_Layer: 17
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10316,6 +10316,42 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!19719996 &6718366961786653242
+TilemapCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6826377579844507422}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_MaximumTileChangeCount: 1000
+  m_ExtrusionFactor: 0
+  m_UseDelaunayMesh: 0
 --- !u!1 &6840247765774946643
 GameObject:
   m_ObjectHideFlags: 0

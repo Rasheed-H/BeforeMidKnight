@@ -1,6 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Represents the Ghast enemy, which alternates between waiting and moving toward the player.
+/// Damages the player on contact and uses a behavior loop to chase its target.
+/// </summary>
 public class Ghast : Enemy
 {
     public AudioClip deathSound;
@@ -16,12 +20,19 @@ public class Ghast : Enemy
     private bool isMovingToTarget = false; 
     private Coroutine ghastCoroutine;
 
+    /// <summary>
+    /// Initializes the Ghast's properties, including its wait time, based on the GameManager.
+    /// </summary>
     protected override void Awake()
     {
         base.Awake();
         waitTime = GameManager.Instance.ghastWaitTime;
     }
 
+    /// <summary>
+    /// Updates the Ghast's behavior every frame, handling movement toward the target position or waiting.
+    /// Updates the animation direction when focusing on the player.
+    /// </summary>
     private void Update()
     {
         if (!isActive || isDefeated)
@@ -159,5 +170,6 @@ public class Ghast : Enemy
     {
         base.Defeat();
         SoundEffects.Instance.PlaySound(deathSound);
+        GameManager.Instance.IncrementKillCounter("ghast");
     }
 }

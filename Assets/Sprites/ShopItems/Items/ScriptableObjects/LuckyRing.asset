@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: LuckyRing
   m_EditorClassIdentifier: 
   itemName: Lucky Ring
-  itemSprite: {fileID: 0}
-  itemDescription: 'Special Effect: <b>Lucky Ring</b>\nIncreases the chance of a
-    treasure room spawning by 10%'
+  itemSprite: {fileID: 21300000, guid: 9ae9299759ad6614fb277800e71a97cf, type: 3}
+  itemDescription: +10% Treasure Room Chance
   itemPrice: 120
   itemRarity: rare
   statModifiers:

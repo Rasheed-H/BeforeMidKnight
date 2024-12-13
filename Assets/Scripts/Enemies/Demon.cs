@@ -2,7 +2,8 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// The Demon boss enemy with multiple states: Idle, Shoot, and Chase.
+/// The Demon boss enemy with multiple states (Idle, Shoot, Chase). 
+/// Manages state transitions, animations, and interactions with the player.
 /// </summary>
 public class Demon : Enemy
 {
@@ -40,6 +41,9 @@ public class Demon : Enemy
 
     private Vector2 centerOffset = new Vector2(-0.49f, -0.5f);
 
+    /// <summary>
+    /// Initializes the Demon's health and prepares it for gameplay based on GameManager settings.
+    /// </summary>
     protected override void Awake()
     {
         base.Awake();
@@ -47,6 +51,9 @@ public class Demon : Enemy
         currentHealth = maxHealth;
     }
 
+    /// <summary>
+    /// Updates the Demon's state and animation direction relative to the player's position.
+    /// </summary>
     private void Update()
     {
         if (!isActive || isDefeated)
@@ -109,7 +116,7 @@ public class Demon : Enemy
     }
 
     /// <summary>
-    /// Safely executes a state coroutine and logs exceptions if they occur.
+    /// Safely executes a state coroutine
     /// </summary>
     private IEnumerator SafeHandleState(System.Func<IEnumerator> stateHandler)
     {
@@ -119,9 +126,8 @@ public class Demon : Enemy
         {
             stateCoroutine = stateHandler();
         }
-        catch (System.Exception ex)
+        catch (System.Exception)
         {
-            Debug.LogError($"Error preparing state '{currentState}': {ex.Message}\n{ex.StackTrace}");
             yield break;
         }
 
@@ -137,9 +143,8 @@ public class Demon : Enemy
                 moveNext = stateCoroutine.MoveNext();
                 current = stateCoroutine.Current;
             }
-            catch (System.Exception ex)
+            catch (System.Exception)
             {
-                Debug.LogError($"Error during execution of state '{currentState}': {ex.Message}\n{ex.StackTrace}");
                 yield break;
             }
 
@@ -149,6 +154,9 @@ public class Demon : Enemy
         }
     }
 
+    /// <summary>
+    /// Handles the Idle state, moving the Demon to the center and waiting for a specified duration.
+    /// </summary>
     private IEnumerator HandleIdleState()
     {
         ResetAnimationParameters();
@@ -157,6 +165,9 @@ public class Demon : Enemy
         currentState = DemonState.Shoot;
     }
 
+    /// <summary>
+    /// Handles the Shoot state, triggering attack animations and firing projectiles at the player.
+    /// </summary>
     private IEnumerator HandleShootState()
     {
         for (int i = 0; i < shotsPerCycle; i++)
@@ -168,6 +179,9 @@ public class Demon : Enemy
         currentState = DemonState.Chase;
     }
 
+    /// <summary>
+    /// Instantiates and launches a projectile (scythe) in the direction of the player.
+    /// </summary>
     public void FireProjectile()
     {
         if (playerTransform == null || demonScythePrefab == null || scytheSpawnPoint == null)
@@ -187,6 +201,9 @@ public class Demon : Enemy
         scythe.transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
+    /// <summary>
+    /// Handles the Chase state, moving the Demon towards the player and pausing periodically.
+    /// </summary>
     private IEnumerator HandleChaseState()
     {
         float chaseTimer = 0f;
@@ -213,6 +230,10 @@ public class Demon : Enemy
         currentState = DemonState.Idle;
     }
 
+    /// <summary>
+    /// Moves the Demon towards a specified target position while updating its velocity and animations.
+    /// </summary>
+    /// <param name="target">The target position to move towards.</param>
     private void MoveTowardsTarget(Vector2 target)
     {
         Vector2 direction = (target - (Vector2)transform.position).normalized;
@@ -220,6 +241,9 @@ public class Demon : Enemy
         animator.SetBool("isMoving", true);
     }
 
+    /// <summary>
+    /// Moves the Demon to the center of the room during the Idle state.
+    /// </summary>
     private IEnumerator MoveToCenter()
     {
         targetPosition = (Vector2)transform.parent.position + centerOffset;
@@ -245,11 +269,14 @@ public class Demon : Enemy
             if (player != null)
             {
                 player.TakeDamage(damage);
-                Debug.Log("Player hit by Demon!");
             }
         }
     }
 
+    /// <summary>
+    /// Updates the Demon's animation direction based on its current movement vector.
+    /// </summary>
+    /// <param name="direction">Direction vector indicating the movement or facing direction.</param>
     private void UpdateAnimationDirection(Vector2 direction)
     {
         float absX = Mathf.Abs(direction.x);
@@ -269,6 +296,9 @@ public class Demon : Enemy
         }
     }
 
+    /// <summary>
+    /// Resets the Demon's animation parameters to their default values, stopping movement animations.
+    /// </summary>
     private void ResetAnimationParameters()
     {
         animator.SetBool("isMoving", false);
@@ -276,6 +306,10 @@ public class Demon : Enemy
         animator.SetFloat("MoveY", 0);
     }
 
+    /// <summary>
+    /// Reduces the Demon's health when damaged, playing a sound effect and triggering damage animations.
+    /// </summary>
+    /// <param name="damageAmount">The amount of damage dealt to the Demon.</param>
     public override void TakeDamage(int damageAmount)
     {
         base.TakeDamage(damageAmount);
@@ -290,6 +324,7 @@ public class Demon : Enemy
         Instantiate(portalPrefab, transform.position, Quaternion.identity);
         base.Defeat();
         SoundEffects.Instance.PlaySound(deathSound);
+        GameManager.Instance.IncrementKillCounter("demon");
     }
 
 }

@@ -1,6 +1,10 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// Manages the Settings Menu, including navigation between different settings pages
+/// and toggling the menu visibility.
+/// </summary>
 public class SettingsMenuController : MonoBehaviour
 {
     [Header("Settings Menu Components")]
@@ -57,6 +61,9 @@ public class SettingsMenuController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Returns to the main settings options from a specific settings page.
+    /// </summary>
     public void SettingsBack()
     {
         page = 1;

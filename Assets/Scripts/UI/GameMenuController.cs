@@ -13,6 +13,7 @@ public class GameMenuController : MonoBehaviour
     public TMP_Text currentWeekText;
     public TMP_Text weeklyQuotaText;
     public TMP_Text totalCoinsText;
+    [SerializeField] private AudioClip buttonClickSound;
 
     /// <summary>
     /// Initializes the game menu, checks game over conditions, and updates the UI.
@@ -50,7 +51,7 @@ public class GameMenuController : MonoBehaviour
     public void OnStartGameClicked()
     {
         GameManager.Instance.StartDay();
-        SceneManager.LoadScene("DungeonMainTest");
+        SceneManager.LoadScene("Dungeon");
     }
 
     /// <summary>
@@ -67,6 +68,11 @@ public class GameMenuController : MonoBehaviour
     public void OnMainMenuClicked()
     {
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void PlayButtonClickSound()
+    {
+        SoundEffects.Instance.PlaySound(buttonClickSound);
     }
 
 }

@@ -22,7 +22,7 @@ MonoBehaviour:
   - statName: dashCooldown
     value: -1
   - statName: dashDistance
-    value: 2
+    value: 1
   - statName: dashDamage
     value: 3
   specialEffects:

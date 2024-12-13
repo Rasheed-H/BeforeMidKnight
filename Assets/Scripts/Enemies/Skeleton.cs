@@ -14,7 +14,7 @@ public class Skeleton : Enemy
     public float shootingRange = 10f;    
     public float fleeingDistance = 3f;   
     public float fleeDuration = 1f;     
-    public float fleeSpeedMultiplier = 2.5f; 
+    public float fleeSpeedMultiplier = 1.65f; 
     public float fleeCooldown = 8f;       
 
     public GameObject arrowPrefab;        
@@ -29,6 +29,9 @@ public class Skeleton : Enemy
     private bool isFleeTimerActive = false;
     private float fleeCooldownTimer = 0f;
 
+    /// <summary>
+    /// Initializes the skeleton's properties, including health and fire rate, based on the GameManager stat.
+    /// </summary>
     protected override void Awake()
     {
         base.Awake();
@@ -64,7 +67,7 @@ public class Skeleton : Enemy
 
         CheckPlayerDistance();
 
-        if (isFleeing)
+        if (isFleeing && !GameManager.Instance.IsSpecialEffectActive("BoneCollector"))
         {
             FleeFromPlayer();
         }
@@ -201,5 +204,6 @@ public class Skeleton : Enemy
     {
         base.Defeat();
         SoundEffects.Instance.PlaySound(deathSound);
+        GameManager.Instance.IncrementKillCounter("skeleton");
     }
 }

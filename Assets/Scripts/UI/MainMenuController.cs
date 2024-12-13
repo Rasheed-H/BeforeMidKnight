@@ -13,10 +13,8 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private TMP_Text continueButtonText;
     [SerializeField] private Color disabledButtonTextColor;
     [SerializeField] private GameObject newGameWarningPopup;
+    [SerializeField] private AudioClip buttonClickSound;
 
-    [Header("UI References")]
-    public GameObject scoreStatsUI;  
-    public ScoreListController scoreListController;  
 
     /// <summary>
     /// Initializes the main menu, checking the game state to set up the Continue button accordingly.
@@ -90,22 +88,15 @@ public class MainMenuController : MonoBehaviour
     }
 
     /// <summary>
-    /// Called when the Scores/Stats button is clicked.
-    /// Enables the ScoreStatsUI and calls DisplayScores to populate the leaderboard.
-    /// </summary>
-    public void OnScoresStatsButtonClicked()
-    {
-        scoreListController.DisplayScores();
-
-        scoreStatsUI.SetActive(true);
-    }
-
-    /// <summary>
     /// Exits the game when the Quit button is clicked.
     /// </summary>
     public void OnQuitButtonClicked()
     {
         Application.Quit();
-        Debug.Log("Game Quit!");
+    }
+
+    public void PlayButtonClickSound() 
+    {
+        SoundEffects.Instance.PlaySound(buttonClickSound);
     }
 }

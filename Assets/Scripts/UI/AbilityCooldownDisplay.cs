@@ -14,6 +14,7 @@ public class AbilityCooldownDisplay : MonoBehaviour
     [SerializeField] private Image imageCooldown;
     [SerializeField] private TMP_Text textCooldown;
     [SerializeField] private Image imageEdge;
+    [SerializeField] private GameObject cooldownFrame;
 
     private float cooldownTime;
     private float cooldownTimer;
@@ -93,5 +94,16 @@ public class AbilityCooldownDisplay : MonoBehaviour
         textCooldown.gameObject.SetActive(false);
         imageCooldown.fillAmount = 0.0f;
         imageEdge.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Activates or deactivates the cooldown frame.
+    /// </summary>
+    public void SetCooldownFrameActive(bool isActive)
+    {
+        if (cooldownFrame != null)
+        {
+            cooldownFrame.SetActive(isActive);
+        }
     }
 }

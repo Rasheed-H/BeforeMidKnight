@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Collections.Generic;
+using System;
 
 /// <summary>
 /// Manages database operations for saving and retrieving game data.
@@ -89,6 +90,28 @@ public class DbManager : MonoBehaviour
                                     (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)";
                 command.ExecuteNonQuery();
 
+
+                //insert 10 random runs
+                command.CommandText = "SELECT COUNT(*) FROM Runs";
+                int runCount = Convert.ToInt32(command.ExecuteScalar());
+
+                if (runCount == 0)
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        command.CommandText = @"INSERT INTO Runs (Score, Week, Deaths, Escapes, TotalCoinsDeposited, Kills, Date)
+                                VALUES (@score, @week, @deaths, @escapes, @coinsDeposited, @kills, @date)";
+                        command.Parameters.Clear();
+                        command.Parameters.Add(new SQLiteParameter("@score", UnityEngine.Random.Range(100, 1000))); 
+                        command.Parameters.Add(new SQLiteParameter("@week", UnityEngine.Random.Range(1, 5))); 
+                        command.Parameters.Add(new SQLiteParameter("@deaths", UnityEngine.Random.Range(0, 3))); 
+                        command.Parameters.Add(new SQLiteParameter("@escapes", UnityEngine.Random.Range(0, 2))); 
+                        command.Parameters.Add(new SQLiteParameter("@coinsDeposited", UnityEngine.Random.Range(100, 500))); 
+                        command.Parameters.Add(new SQLiteParameter("@kills", UnityEngine.Random.Range(10, 50))); 
+                        command.Parameters.Add(new SQLiteParameter("@date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
+                        command.ExecuteNonQuery();
+                    }
+                }
             }
         }
     }
@@ -117,68 +140,29 @@ public class DbManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates the Stats table, comparing incoming values for highestScore and highestWeek, 
-    /// and adding all other totals to the existing values.
+    /// Updates the Stats table with cumulative values and higher values where applicable.
     /// </summary>
-    public void UpdateStats(int highestScore, int highestWeek, int totalDays, int totalCoinsDeposited, int totalCoinsLost, int totalDeaths, int totalEscapes, int totalKills, int totalGoblinKills, int totalSkeletonKills, int totalSpiderKills, int totalWizardKills, int totalBossKills)
+    public void UpdateStats(int highestScore, int highestWeek, int totalDays, int totalCoinsDeposited, int totalCoinsLost, int totalDeaths, int totalEscapes, int totalKills, int totalGoblinKills, int totalSkeletonKills, int totalGhastKills, int totalWizardKills, int totalDemonKills)
     {
         using (var connection = new SQLiteConnection(dbPath))
         {
             connection.Open();
-
-            int currentHighestScore = 0, currentHighestWeek = 0, currentTotalDays = 0, currentTotalCoinsDeposited = 0;
-            int currentTotalCoinsLost = 0, currentTotalDeaths = 0, currentTotalEscapes = 0, currentTotalKills = 0;
-            int currentTotalGoblinKills = 0, currentTotalSkeletonKills = 0, currentTotalSpiderKills = 0;
-            int currentTotalWizardKills = 0, currentTotalBossKills = 0;
-
-            // Retrieve current values
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = "SELECT * FROM Stats WHERE Id = 1";
-                using (var reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        currentHighestScore = reader.GetInt32(reader.GetOrdinal("HighestScore"));
-                        currentHighestWeek = reader.GetInt32(reader.GetOrdinal("HighestWeek"));
-                        currentTotalDays = reader.GetInt32(reader.GetOrdinal("TotalDays"));
-                        currentTotalCoinsDeposited = reader.GetInt32(reader.GetOrdinal("TotalCoinsDeposited"));
-                        currentTotalCoinsLost = reader.GetInt32(reader.GetOrdinal("TotalCoinsLost"));
-                        currentTotalDeaths = reader.GetInt32(reader.GetOrdinal("TotalDeaths"));
-                        currentTotalEscapes = reader.GetInt32(reader.GetOrdinal("TotalEscapes"));
-                        currentTotalKills = reader.GetInt32(reader.GetOrdinal("TotalKills"));
-                        currentTotalGoblinKills = reader.GetInt32(reader.GetOrdinal("TotalGoblinKills"));
-                        currentTotalSkeletonKills = reader.GetInt32(reader.GetOrdinal("TotalSkeletonKills"));
-                        currentTotalSpiderKills = reader.GetInt32(reader.GetOrdinal("TotalGhastKills"));
-                        currentTotalWizardKills = reader.GetInt32(reader.GetOrdinal("TotalWizardKills"));
-                        currentTotalBossKills = reader.GetInt32(reader.GetOrdinal("TotalDemonKills"));
-                    }
-                }
-            }
-
-            // Update only if incoming values are greater or add to totals
-            highestScore = Mathf.Max(currentHighestScore, highestScore);
-            highestWeek = Mathf.Max(currentHighestWeek, highestWeek);
-            totalDays += currentTotalDays;
-            totalCoinsDeposited += currentTotalCoinsDeposited;
-            totalCoinsLost += currentTotalCoinsLost;
-            totalDeaths += currentTotalDeaths;
-            totalEscapes += currentTotalEscapes;
-            totalKills += currentTotalKills;
-            totalGoblinKills += currentTotalGoblinKills;
-            totalSkeletonKills += currentTotalSkeletonKills;
-            totalSpiderKills += currentTotalSpiderKills;
-            totalWizardKills += currentTotalWizardKills;
-            totalBossKills += currentTotalBossKills;
-
-            // Update the Stats table
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = @"UPDATE Stats SET HighestScore = @highestScore, HighestWeek = @highestWeek, 
-                                        TotalDays = @totalDays, TotalCoinsDeposited = @totalCoinsDeposited, TotalCoinsLost = @totalCoinsLost, 
-                                        TotalDeaths = @totalDeaths, TotalEscapes = @totalEscapes, TotalKills = @totalKills,
-                                        TotalGoblinKills = @totalGoblinKills, TotalSkeletonKills = @totalSkeletonKills, 
-                                        TotalSpiderKills = @totalSpiderKills, TotalWizardKills = @totalWizardKills, TotalBossKills = @totalBossKills
+                command.CommandText = @"UPDATE Stats SET 
+                                        HighestScore = MAX(HighestScore, @highestScore), 
+                                        HighestWeek = MAX(HighestWeek, @highestWeek), 
+                                        TotalDays = TotalDays + @totalDays, 
+                                        TotalCoinsDeposited = TotalCoinsDeposited + @totalCoinsDeposited, 
+                                        TotalCoinsLost = TotalCoinsLost + @totalCoinsLost, 
+                                        TotalDeaths = TotalDeaths + @totalDeaths, 
+                                        TotalEscapes = TotalEscapes + @totalEscapes, 
+                                        TotalKills = TotalKills + @totalKills, 
+                                        TotalGoblinKills = TotalGoblinKills + @totalGoblinKills, 
+                                        TotalSkeletonKills = TotalSkeletonKills + @totalSkeletonKills, 
+                                        TotalGhastKills = TotalGhastKills + @totalGhastKills, 
+                                        TotalWizardKills = TotalWizardKills + @totalWizardKills, 
+                                        TotalDemonKills = TotalDemonKills + @totalDemonKills
                                         WHERE Id = 1";
                 command.Parameters.Add(new SQLiteParameter("@highestScore", highestScore));
                 command.Parameters.Add(new SQLiteParameter("@highestWeek", highestWeek));
@@ -190,13 +174,18 @@ public class DbManager : MonoBehaviour
                 command.Parameters.Add(new SQLiteParameter("@totalKills", totalKills));
                 command.Parameters.Add(new SQLiteParameter("@totalGoblinKills", totalGoblinKills));
                 command.Parameters.Add(new SQLiteParameter("@totalSkeletonKills", totalSkeletonKills));
-                command.Parameters.Add(new SQLiteParameter("@totalGhastKills", totalSpiderKills));
+                command.Parameters.Add(new SQLiteParameter("@totalGhastKills", totalGhastKills));
                 command.Parameters.Add(new SQLiteParameter("@totalWizardKills", totalWizardKills));
-                command.Parameters.Add(new SQLiteParameter("@totalDemonKills", totalBossKills));
+                command.Parameters.Add(new SQLiteParameter("@totalDemonKills", totalDemonKills));
                 command.ExecuteNonQuery();
             }
         }
     }
+
+    /// <summary>
+    /// Represents the structure of a run entry in the Runs table, containing details about
+    /// a specific gameplay session.
+    /// </summary>
     public class RunData
     {
         public int Id;
@@ -209,6 +198,10 @@ public class DbManager : MonoBehaviour
         public string Date;
     }
 
+    /// <summary>
+    /// Retrieves all run entries from the Runs table, ordered by their ID in descending order.
+    /// </summary>
+    /// <returns>A list of `RunData` objects containing details of each run.</returns>
     public List<RunData> GetAllRuns()
     {
         List<RunData> runs = new List<RunData>();
@@ -218,7 +211,7 @@ public class DbManager : MonoBehaviour
             connection.Open();
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = "SELECT Id, Score, Week, Deaths, Escapes, TotalCoinsDeposited, Kills, Date FROM Runs ORDER BY Score DESC";
+                command.CommandText = "SELECT Id, Score, Week, Deaths, Escapes, TotalCoinsDeposited, Kills, Date FROM Runs ORDER BY Id DESC";
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
@@ -242,23 +235,9 @@ public class DbManager : MonoBehaviour
         return runs;
     }
 
-    public class StatsData
-    {
-        public int HighestScore;
-        public int HighestWeek;
-        public int TotalDays;
-        public int TotalCoinsDeposited;
-        public int TotalCoinsLost;
-        public int TotalDeaths;
-        public int TotalEscapes;
-        public int TotalKills;
-        public int TotalGoblinKills;
-        public int TotalSkeletonKills;
-        public int TotalSpiderKills;
-        public int TotalWizardKills;
-        public int TotalBossKills;
-    }
-
+    /// <summary>
+    /// Retrieves the current stats data from the database.
+    /// </summary>
     public StatsData GetStats()
     {
         StatsData stats = new StatsData();
@@ -283,9 +262,9 @@ public class DbManager : MonoBehaviour
                         stats.TotalKills = reader.GetInt32(reader.GetOrdinal("TotalKills"));
                         stats.TotalGoblinKills = reader.GetInt32(reader.GetOrdinal("TotalGoblinKills"));
                         stats.TotalSkeletonKills = reader.GetInt32(reader.GetOrdinal("TotalSkeletonKills"));
-                        stats.TotalSpiderKills = reader.GetInt32(reader.GetOrdinal("TotalSpiderKills"));
+                        stats.TotalGhastKills = reader.GetInt32(reader.GetOrdinal("TotalGhastKills"));
                         stats.TotalWizardKills = reader.GetInt32(reader.GetOrdinal("TotalWizardKills"));
-                        stats.TotalBossKills = reader.GetInt32(reader.GetOrdinal("TotalBossKills"));
+                        stats.TotalDemonKills = reader.GetInt32(reader.GetOrdinal("TotalDemonKills"));
                     }
                 }
             }
@@ -294,4 +273,23 @@ public class DbManager : MonoBehaviour
         return stats;
     }
 
+    /// <summary>
+    /// Class representing the structure of the Stats table.
+    /// </summary>
+    public class StatsData
+    {
+        public int HighestScore;
+        public int HighestWeek;
+        public int TotalDays;
+        public int TotalCoinsDeposited;
+        public int TotalCoinsLost;
+        public int TotalDeaths;
+        public int TotalEscapes;
+        public int TotalKills;
+        public int TotalGoblinKills;
+        public int TotalSkeletonKills;
+        public int TotalGhastKills;
+        public int TotalWizardKills;
+        public int TotalDemonKills;
+    }
 }

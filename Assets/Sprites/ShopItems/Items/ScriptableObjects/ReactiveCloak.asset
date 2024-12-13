@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Reactive Cloak
   itemSprite: {fileID: 21300000, guid: a4d54846125e91844bf8346dbb7a2e2d, type: 3}
-  itemDescription: +4s invincibility duration upon taking damage.\n\nSpecial:<b>Blue
-    Cloak</b>\n(does nothing)
+  itemDescription: '+4s invincibility duration upon taking damage.\n\nSpecial: <b>Blue
+    Cloak</b>\n(does nothing)'
   itemPrice: 300
   itemRarity: mythical
   statModifiers:

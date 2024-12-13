@@ -174,8 +174,8 @@ public class RoomContent : MonoBehaviour
 
         for (int attempt = 0; attempt < maxAttempts; attempt++)
         {
-            float marginX = roomWidth * 0.15f;
-            float marginY = roomHeight * 0.15f;
+            float marginX = roomWidth * 0.20f;
+            float marginY = roomHeight * 0.20f;
 
             float minX = transform.position.x - (roomWidth / 2) + marginX;
             float maxX = transform.position.x + (roomWidth / 2) - marginX;
@@ -186,11 +186,6 @@ public class RoomContent : MonoBehaviour
             float y = Random.Range(minY, maxY);
 
             Vector2 position = new Vector2(x, y);
-
-            // Debugging
-            Debug.Log($"Checking position {position}");
-            Debug.Log($"On Ground: {Physics2D.OverlapPoint(position, LayerMask.GetMask("Ground"))}");
-            Debug.Log($"On Air: {Physics2D.OverlapPoint(position, LayerMask.GetMask("Air"))}");
 
             if (Physics2D.OverlapPoint(position, LayerMask.GetMask("Ground")) &&
                 !Physics2D.OverlapPoint(position, LayerMask.GetMask("Air")))

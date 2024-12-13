@@ -1,6 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// Responsible for generating a dungeon layout using a crawler-based system. 
+/// Spawns start, treasure, end, and empty rooms and connects them with doors.
+/// </summary>
 public class DungeonGenerator : MonoBehaviour
 {
     public GameObject startRoomPrefab;
@@ -27,11 +31,18 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Starts the dungeon generation process when the scene loads.
+    /// </summary>
     void Start()
     {
         GenerateDungeon();
     }
 
+    /// <summary>
+    /// Generates the dungeon by spawning rooms using multiple crawlers. 
+    /// Assigns start, treasure, and end rooms and ensures all rooms are connected by doors.
+    /// </summary>
     void GenerateDungeon()
     {
         int maxIterations = GameManager.Instance.dungeonRoomCount; 
@@ -81,6 +92,11 @@ public class DungeonGenerator : MonoBehaviour
         UpdateRoomDoors();
     }
 
+    /// <summary>
+    /// Spawns a room prefab at the specified grid position and tracks it in the spawned rooms dictionary.
+    /// </summary>
+    /// <param name="position">Grid position of the room.</param>
+    /// <param name="roomPrefab">Prefab to instantiate as the room.</param>
     void SpawnRoom(Vector2Int position, GameObject roomPrefab)
     {
         Vector3 worldPosition = new Vector3(position.x * roomWidth, position.y * roomHeight, 0);
@@ -89,6 +105,11 @@ public class DungeonGenerator : MonoBehaviour
         spawnedRooms.Add(position, newRoom);
     }
 
+    /// <summary>
+    /// Determines the next movement direction for a crawler, favoring the previous direction for continuity.
+    /// </summary>
+    /// <param name="lastDirection">The last direction moved by the crawler.</param>
+    /// <returns>A Vector2Int representing the new direction.</returns>
     Vector2Int GetDirection(Vector2Int lastDirection)
     {
         List<Vector2Int> directions = new List<Vector2Int>
@@ -107,6 +128,11 @@ public class DungeonGenerator : MonoBehaviour
         return directions[Random.Range(0, directions.Count)];
     }
 
+    /// <summary>
+    /// Randomly selects a room prefab, with a chance to spawn a treasure room.
+    /// </summary>
+    /// <param name="treasureRoomChance">Probability of spawning a treasure room.</param>
+    /// <returns>A GameObject representing the selected room prefab.</returns>
     GameObject GetRandomRoomPrefab(float treasureRoomChance)
     {
         if (Random.value <= treasureRoomChance)
@@ -115,12 +141,15 @@ public class DungeonGenerator : MonoBehaviour
         }
         else
         {
-            // Select a random empty room prefab
             int randomIndex = Random.Range(0, emptyRoomPrefabs.Count);
             return emptyRoomPrefabs[randomIndex];
         }
     }
 
+    /// <summary>
+    /// Replaces the last room in the dungeon with the end room prefab.
+    /// </summary>
+    /// <param name="lastRoomPosition">The grid position of the last room to replace.</param>
     void ReplaceLastRoomWithEndRoom(Vector2Int lastRoomPosition)
     {
         if (spawnedRooms.ContainsKey(lastRoomPosition))
@@ -132,6 +161,9 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates the door states for all rooms in the dungeon based on neighboring room connections.
+    /// </summary>
     private void UpdateRoomDoors()
     {
         foreach (KeyValuePair<Vector2Int, GameObject> roomEntry in spawnedRooms)

@@ -29,11 +29,6 @@ public class RoomController : MonoBehaviour
         mainCamera = Camera.main;
         audioSource = GetComponent<AudioSource>();
         roomContent = GetComponent<RoomContent>();
-
-        if (roomContent == null)
-        {
-            Debug.LogError("RoomContent script is missing from this room!");
-        }
     }
 
     /// <summary>

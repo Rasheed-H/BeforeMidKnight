@@ -14,21 +14,27 @@ public class GameOverMenuController : MonoBehaviour
     public TMP_Text escapesText;
     public TMP_Text deathsText;
     public TMP_Text coinDepositedText;
+    public TMP_Text totalKillsText;
 
     private int score;
     private int totalKills;
+
+    [SerializeField] private AudioClip buttonClickSound;
+    [SerializeField] private AudioClip gameOverSound;
 
     /// <summary>
     /// Initializes the game over menu by calculating the score and total kills, then updating the UI elements.
     /// </summary>
     private void Start()
     {
-        // Calculate score based on total coins deposited and current week
+        MusicManager.Instance.StopMusic();
+        SoundEffects.Instance.PlaySound(gameOverSound);
+
         score = GameManager.Instance.totalCoinsDeposited * GameManager.Instance.currentWeek;
 
-        // Calculate total kills from various enemies
         totalKills = GameManager.Instance.goblinKills + GameManager.Instance.skeletonKills +
-                     GameManager.Instance.ghastKills + GameManager.Instance.wizardKills + GameManager.Instance.demonKills;
+                     GameManager.Instance.ghastKills + GameManager.Instance.wizardKills +
+                     GameManager.Instance.demonKills;
 
         UpdateText();
     }
@@ -38,11 +44,12 @@ public class GameOverMenuController : MonoBehaviour
     /// </summary>
     private void UpdateText()
     {
-        weeksText.text = "Weeks Survived: " + GameManager.Instance.currentWeek;
-        scoreText.text = ""+score;
-        escapesText.text = "Escapes: " + GameManager.Instance.escapes;
-        deathsText.text = "Deaths: " + GameManager.Instance.deaths;
-        coinDepositedText.text = "x " + GameManager.Instance.totalCoinsDeposited;
+        weeksText.text = $"Weeks Survived: {GameManager.Instance.currentWeek}";
+        escapesText.text = $"Escapes: {GameManager.Instance.escapes}";
+        totalKillsText.text = $"Kills: {totalKills}";
+        deathsText.text = $"Deaths: {GameManager.Instance.deaths}";
+        coinDepositedText.text = $"x {GameManager.Instance.totalCoinsDeposited}";
+        scoreText.text = $"{score}";
     }
 
     /// <summary>
@@ -51,7 +58,6 @@ public class GameOverMenuController : MonoBehaviour
     /// </summary>
     public void OnMainMenuClicked()
     {
-        // Insert the run data into the Runs table
         DbManager.Instance.InsertRun(
             score,
             GameManager.Instance.currentWeek,
@@ -61,7 +67,6 @@ public class GameOverMenuController : MonoBehaviour
             totalKills
         );
 
-        // Update cumulative and highest stats in the Stats table
         DbManager.Instance.UpdateStats(
             score,
             GameManager.Instance.currentWeek,
@@ -78,8 +83,12 @@ public class GameOverMenuController : MonoBehaviour
             GameManager.Instance.demonKills
         );
 
-        // Reset the game state and return to the main menu
         GameManager.Instance.ResetGameState();
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void PlayButtonClickSound()
+    {
+        SoundEffects.Instance.PlaySound(buttonClickSound);
     }
 }

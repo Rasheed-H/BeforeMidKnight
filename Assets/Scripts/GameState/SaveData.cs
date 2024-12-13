@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// Represents the structure for saving and loading game data. Includes information about
+/// the player's progress, stats, inventory, and dungeon properties.
+/// </summary>
 [Serializable]
 public class SaveData
 {
@@ -19,9 +23,9 @@ public class SaveData
     public int escapes;
     public int goblinKills;
     public int skeletonKills;
-    public int spiderKills;
+    public int ghastKills;
     public int wizardKills;
-    public int bossKills;
+    public int demonKills;
 
     public int dungeonRoomCount;
     public int goblinHealth;
@@ -32,8 +36,8 @@ public class SaveData
     public int wizardHealth;
     public float wizardProjSpeed;
     public int demonHealth;
+    public float time;
 
-    // Shop & Inventory
     public List<Stat> statList = new List<Stat>();
     public List<string> activeSpecialEffects = new List<string>();
     public List<string> purchasedItems = new List<string>();

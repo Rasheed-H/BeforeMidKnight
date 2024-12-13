@@ -50,9 +50,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0e051612f7f765439abc4ee48d2abe6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fullHeartSprite: {fileID: -2116511474, guid: 93d56f6cda246874f9b8174163d2d6c2, type: 3}
-  halfHeartSprite: {fileID: -559143771, guid: 93d56f6cda246874f9b8174163d2d6c2, type: 3}
-  emptyHeartSprite: {fileID: 432418890, guid: 93d56f6cda246874f9b8174163d2d6c2, type: 3}
+  fullHeartSprite: {fileID: 21300000, guid: 92ec822a08a756d4eb72ef15c4338906, type: 3}
+  halfHeartSprite: {fileID: 21300000, guid: c2b0f2d215db535479fa84aab8a32dd6, type: 3}
+  emptyHeartSprite: {fileID: 21300000, guid: 12a18c28b69568d4da37e13712979e00, type: 3}
 --- !u!222 &2168354303103846629
 CanvasRenderer:
   m_ObjectHideFlags: 0

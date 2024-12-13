@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class HeartsManager : MonoBehaviour
 {
-    public GameObject heartPrefab; // The prefab for each heart UI element
+    public GameObject heartPrefab; 
     private List<HeartController> hearts = new List<HeartController>();
 
     /// <summary>

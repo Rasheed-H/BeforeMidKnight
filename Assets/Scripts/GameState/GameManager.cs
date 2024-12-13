@@ -1,13 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime.Collections;
 
 
 /// <summary>
 /// Manages game state, progression, and data persistence for the player's lives, coins, and weekly targets.
 /// This singleton ensures data is retained across scenes and manages saving/loading of game data.
 /// </summary>
-
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
@@ -31,6 +29,7 @@ public class GameManager : MonoBehaviour
     public int wizardHealth;
     public float wizardProjSpeed;
     public int demonHealth;
+    public float time;
 
     // Stats and Progression Tracking
     public int totalDays;
@@ -54,6 +53,9 @@ public class GameManager : MonoBehaviour
     public List<Stat> statList = new List<Stat>();
     private HashSet<string> activeSpecialEffects = new HashSet<string>();
 
+    /// <summary>
+    /// Initializes the singleton instance and loads the game state, ensuring the object persists across scenes.
+    /// </summary>
     private void Awake()
     {
         if (Instance == null)
@@ -68,8 +70,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
 
+    /// <summary>
+    /// Loads the game state from the save system. If no save data exists, resets the game state to defaults.
+    /// </summary>
     public void LoadGameState()
     {
         SaveData data = SaveSystem.LoadGame();
@@ -89,9 +93,10 @@ public class GameManager : MonoBehaviour
             escapes = data.escapes;
             goblinKills = data.goblinKills;
             skeletonKills = data.skeletonKills;
-            ghastKills = data.spiderKills;
+            ghastKills = data.ghastKills;
             wizardKills = data.wizardKills;
-            demonKills = data.bossKills;
+            demonKills = data.demonKills;
+            time = data.time;
 
             dungeonRoomCount = data.dungeonRoomCount;
             goblinHealth = data.goblinHealth;
@@ -102,6 +107,7 @@ public class GameManager : MonoBehaviour
             wizardHealth = data.wizardHealth;
             wizardProjSpeed = data.wizardProjSpeed;
             demonHealth = data.demonHealth;
+
 
             statList = data.statList ?? new List<Stat>();
 
@@ -118,6 +124,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Saves the current game state to the save system, preserving player progress and stats.
+    /// </summary>
     public void SaveGameState()
     {
         SaveData data = new SaveData
@@ -136,9 +145,9 @@ public class GameManager : MonoBehaviour
             escapes = escapes,
             goblinKills = goblinKills,
             skeletonKills = skeletonKills,
-            spiderKills = ghastKills,
+            ghastKills = ghastKills,
             wizardKills = wizardKills,
-            bossKills = demonKills,
+            demonKills = demonKills,
             dungeonRoomCount = dungeonRoomCount,
             goblinHealth = goblinHealth,
             goblinSpeed = goblinSpeed,
@@ -148,6 +157,7 @@ public class GameManager : MonoBehaviour
             wizardHealth = wizardHealth,
             wizardProjSpeed = wizardProjSpeed,
             demonHealth = demonHealth,
+            time = time,
             statList = statList,
             activeSpecialEffects = new List<string>(activeSpecialEffects),
             purchasedItems = new List<string>(purchasedItems),
@@ -159,6 +169,9 @@ public class GameManager : MonoBehaviour
         SaveSystem.SaveGame(data);
     }
 
+    /// <summary>
+    /// Resets all game-related data to default values, including player stats, progression, and dungeon properties.
+    /// </summary>
     public void ResetGameState()
     {
         // game state
@@ -167,8 +180,9 @@ public class GameManager : MonoBehaviour
         currentWeek = 1;
         weeklyCoins = 0;
         coinQuota = 100;
-        coinsDeposited = 50;
+        coinsDeposited = 0;
         coinsHolding = 0;
+        time = 1080;
 
         // run stats
         totalDays = 0;
@@ -200,35 +214,39 @@ public class GameManager : MonoBehaviour
         statList.Add(new Stat("daggerSpeed", 10f));
         statList.Add(new Stat("daggerCooldown", 1.5f));
         statList.Add(new Stat("dashSpeed", 10f));
-        statList.Add(new Stat("dashDamage", 3));
+        statList.Add(new Stat("dashDamage", 10));
         statList.Add(new Stat("dashCooldown", 4.5f));
         statList.Add(new Stat("dashDistance", 4.0f));
         statList.Add(new Stat("treasureRoomChance", 0.1f));
 
         // dungeon properties
-        dungeonRoomCount = 10;
-        goblinHealth = 20;
-        goblinSpeed = 5f;
-        skeletonHealth = 15;
-        skeletonFireRate = 2f;
-        ghastWaitTime = 3f;
-        wizardHealth = 30;
-        wizardProjSpeed = 2f;
-        demonHealth = 150;
+        dungeonRoomCount = 8; //8
+        goblinHealth = 20; //20
+        goblinSpeed = 4f; //4
+        skeletonHealth = 15; //15
+        skeletonFireRate = 1f; //1
+        ghastWaitTime = 3.5f; //3.5
+        wizardHealth = 20; //20
+        wizardProjSpeed = 1f; //1
+        demonHealth = 160; //160
 
         SaveGameState();
     }
 
+    /// <summary>
+    /// Scales the dungeon difficulty by increasing enemy stats and room count as the player progresses.
+    /// </summary>
     public void scaleDungeon()
     {
-        dungeonRoomCount += 5;
+        dungeonRoomCount += 4;
+        
         // Scale Goblin properties
-        goblinHealth += 5;
-        goblinSpeed = Mathf.Min(goblinSpeed + 2.5f, 17.5f); // Cap at 22.5
+        goblinHealth += 10;
+        goblinSpeed = Mathf.Min(goblinSpeed + 1.5f, 10.0f); // Cap at 10
 
         // Scale Skeleton properties
-        skeletonHealth += 5; // No cap
-        skeletonFireRate = Mathf.Min(skeletonFireRate + 1f, 9f); // Cap at 9
+        skeletonHealth += 10; // No cap
+        skeletonFireRate = Mathf.Min(skeletonFireRate + 0.5f, 4f); // Cap at 4
 
         // Scale Ghast properties
         ghastWaitTime = Mathf.Max(ghastWaitTime - 0.5f, 1f); // Cap at 1 (decreasing)
@@ -238,13 +256,12 @@ public class GameManager : MonoBehaviour
         wizardProjSpeed = Mathf.Max(wizardProjSpeed + 2f, 16f); // Cap at 16
 
         // Scale Demon properties
-        demonHealth += 100; // No cap
-
-        Debug.Log($"Dungeon scaled: RoomCount={dungeonRoomCount}, GoblinHealth={goblinHealth}, GoblinSpeed={goblinSpeed}, " +
-                  $"SkeletonHealth={skeletonHealth}, SkeletonFireRate={skeletonFireRate}, GhastWaitTime={ghastWaitTime}, " +
-                  $"WizardHealth={wizardHealth}, WizardProjSpeed={wizardProjSpeed}, DemonHealth={demonHealth}");
+        demonHealth += 75; // No cap
     }
 
+    /// <summary>
+    /// Modifies the value of a specified stat by a given amount. Logs an error if the stat does not exist.
+    /// </summary>
     public void ModifyStat(string statName, float amount)
     {
         Stat stat = statList.Find(s => s.statName == statName);
@@ -252,12 +269,11 @@ public class GameManager : MonoBehaviour
         {
             stat.statValue += amount;
         }
-        else
-        {
-            Debug.LogError($"Stat '{statName}' does not exist in GameManager.");
-        }
     }
 
+    /// <summary>
+    /// Retrieves the current value of a specified stat. Returns 0 if the stat does not exist.
+    /// </summary>
     public float GetStat(string statName)
     {
         Stat stat = statList.Find(s => s.statName == statName);
@@ -273,11 +289,6 @@ public class GameManager : MonoBehaviour
         if (!activeSpecialEffects.Contains(effectName))
         {
             activeSpecialEffects.Add(effectName);
-            Debug.Log($"Special effect '{effectName}' activated.");
-        }
-        else
-        {
-            Debug.LogWarning($"Special effect '{effectName}' is already active.");
         }
     }
 
@@ -290,14 +301,12 @@ public class GameManager : MonoBehaviour
         if (activeSpecialEffects.Contains(effectName))
         {
             activeSpecialEffects.Remove(effectName);
-            Debug.Log($"Special effect '{effectName}' deactivated.");
-        }
-        else
-        {
-            Debug.LogWarning($"Special effect '{effectName}' is not currently active.");
         }
     }
 
+    /// <summary>
+    /// Checks if a specific special effect is currently active.
+    /// </summary>
     public bool IsSpecialEffectActive(string effectName)
     {
         return activeSpecialEffects.Contains(effectName);
@@ -312,7 +321,6 @@ public class GameManager : MonoBehaviour
     {
         if (purchasedItems.Contains(item.itemName))
         {
-            Debug.LogWarning($"{item.itemName} is already purchased.");
             return false;
         }
 
@@ -321,24 +329,45 @@ public class GameManager : MonoBehaviour
             coinsDeposited -= item.itemPrice;
             purchasedItems.Add(item.itemName);
             SaveGameState();
-            Debug.Log($"{item.itemName} purchased for {item.itemPrice} coins.");
             return true;
         }
         else
         {
-            Debug.LogWarning($"Not enough coins to purchase {item.itemName}. You need {item.itemPrice - coinsDeposited} more coins.");
             return false;
         }
     }
 
-
     /// <summary>
-    /// Handles game over conditions by resetting the game state and disabling active run status.
+    /// Increments the kill counter for the specified enemy type.
     /// </summary>
-    public void GameOver()
+    /// <param name="enemyType">The type of the enemy (e.g., "goblin", "skeleton").</param>
+    public void IncrementKillCounter(string enemyType)
     {
-        Debug.Log("Game Over: Player has no lives left");
-        ResetGameState();
+        switch (enemyType.ToLower())
+        {
+            case "goblin":
+                goblinKills++;
+                break;
+
+            case "skeleton":
+                skeletonKills++;
+                break;
+
+            case "ghast":
+                ghastKills++;
+                break;
+
+            case "wizard":
+                wizardKills++;
+                break;
+
+            case "demon":
+                demonKills++;
+                break;
+
+            default:
+                break;
+        }
     }
 
     /// <summary>
@@ -348,9 +377,17 @@ public class GameManager : MonoBehaviour
     {
         isActive = true;
         daysRemaining--;
+        totalDays++;
         coinsHolding = 0;
+        if (IsSpecialEffectActive("EarlyBird"))
+        {
+            time = 900;
+        }
+        else
+        {
+            time = 1080;
+        }
         dailyItems.Clear();
-        scaleDungeon();
         SaveGameState();
     }
 
@@ -361,9 +398,10 @@ public class GameManager : MonoBehaviour
     {
         currentWeek++;
         daysRemaining = 4;
-        coinQuota += 50;
+        coinQuota += 100;
         weeklyCoins = 0;
         weeklyItem = null;
+        scaleDungeon();
         SaveGameState();
     }
 
@@ -378,14 +416,39 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Deposits the player's current coins into the weekly total after a successful dungeon escape.
+    /// Handles the logic for losing all coins currently held by the player. Applies special effects if active.
     /// </summary>
-    public void Escaped()
+    public void LoseHolding()
     {
-        weeklyCoins += coinsHolding;
+        deaths++;
+        if (IsSpecialEffectActive("DeathDepositor"))
+        {
+            int coinsLostCalculate = coinsHolding;
+            coinsHolding = Mathf.FloorToInt(GameManager.Instance.coinsHolding * 0.3f);
+            coinsLostCalculate -= coinsHolding;
+            totalCoinsLost += coinsLostCalculate;
+        }
+        else
+        {
+            totalCoinsLost += coinsHolding;
+            coinsHolding = 0;
+        }
+        
+        SaveGameState();
+    }
+
+    /// <summary>
+    /// Deposits all coins currently held by the player, adding them to the total and weekly coin counts.
+    /// </summary>
+    public void DepositHolding()
+    {
+        escapes++;
         coinsDeposited += coinsHolding;
+        weeklyCoins += coinsHolding;
         totalCoinsDeposited += coinsHolding;
         coinsHolding = 0;
         SaveGameState();
     }
+
+
 }

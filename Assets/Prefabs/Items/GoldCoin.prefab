@@ -163,6 +163,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value: 3
+  coinSound: {fileID: 8300000, guid: 3c74cb09c9596ad4d80212e0598a2ded, type: 3}
 --- !u!95 &-6562470702952764672
 Animator:
   serializedVersion: 5

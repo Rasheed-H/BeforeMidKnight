@@ -269,15 +269,15 @@ MonoBehaviour:
   currentHealth: 0
   itemDrops:
   - itemPrefab: {fileID: 817110022888878364, guid: c930648ccbdd52f48b4bd6a8edc7314f, type: 3}
-    dropChance: 20
+    dropChance: 25
   - itemPrefab: {fileID: 817110022888878364, guid: 9aab53d168711694886c47da0f514db0, type: 3}
-    dropChance: 15
+    dropChance: 20
   - itemPrefab: {fileID: 817110022888878364, guid: f515a737039774740b3895cf06793fae, type: 3}
-    dropChance: 10
+    dropChance: 15
   - itemPrefab: {fileID: 817110022888878364, guid: 785c5cd331faec5478706fce5ff3b79a, type: 3}
-    dropChance: 5
+    dropChance: 3
   - itemPrefab: {fileID: 817110022888878364, guid: 7a2dbff217f38cc41b41c475491b387b, type: 3}
-    dropChance: 2
+    dropChance: 1
   - itemPrefab: {fileID: 6213545997103074257, guid: 6b6cf4c9a436a8547a5028388de7e8cd, type: 3}
     dropChance: 3
   takeDamageSound: {fileID: 8300000, guid: 31a9f6be02e1cec4e992e3b6a6da7b79, type: 3}
@@ -286,7 +286,7 @@ MonoBehaviour:
   shootingRange: 8
   fleeingDistance: 3
   fleeDuration: 1
-  fleeSpeedMultiplier: 2.5
+  fleeSpeedMultiplier: 1.65
   fleeCooldown: 8
   arrowPrefab: {fileID: 7304834097810667245, guid: fcc97523aac7f0d458716e2ac4416b84, type: 3}
   arrowSpawnPoint: {fileID: 63149431428972813}

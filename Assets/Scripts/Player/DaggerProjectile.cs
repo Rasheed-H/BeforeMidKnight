@@ -32,9 +32,11 @@ public class DaggerProjectile : MonoBehaviour
             if (enemy != null)
             {
                 enemy.TakeDamage(damage);
-                Debug.Log("Enemy hit by dagger! Damage applied: " + damage);
             }
-            Destroy(gameObject);
+            if (!GameManager.Instance.IsSpecialEffectActive("Piercing"))
+            {
+                Destroy(gameObject);
+            }
         }
         else if (collision.CompareTag("Wall") || collision.CompareTag("Box"))
         {

@@ -27,7 +27,6 @@ public class SlashHitbox : MonoBehaviour
             if (enemy != null)
             {
                 enemy.TakeDamage(playerAttack.slashDamage);
-                Debug.Log("Enemy hit by slash! Damage applied: " + playerAttack.slashDamage);
             }
         }
         else if (collision.CompareTag("EnemyProjectile") && GameManager.Instance.IsSpecialEffectActive("ShotSlayer"))

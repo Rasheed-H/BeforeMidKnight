@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f8af6f7a1ce1a14a99f53e635a0ceea, type: 3}
   m_Name: LightStrike
   m_EditorClassIdentifier: 
-  itemName: Swift Strike
+  itemName: Light Strike
   itemSprite: {fileID: 21300000, guid: 6c570a02d731a9447bae5fa85f2c5a17, type: 3}
   itemDescription: -0.5s Slash Cooldown\n\n+5 Slash damage
   itemPrice: 30

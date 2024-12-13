@@ -2,6 +2,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/// <summary>
+/// Manages the UI for a single item in the shop or inventory, including its appearance,
+/// cost, rarity frame, and purchase interactions.
+/// </summary>
 public class ItemContainerUI : MonoBehaviour
 {
     public Image frame; 
@@ -13,8 +17,12 @@ public class ItemContainerUI : MonoBehaviour
 
     public Sprite commonFrame; 
     public Sprite rareFrame;   
-    public Sprite mythicalFrame; 
+    public Sprite mythicalFrame;
 
+    /// <summary>
+    /// Configures the UI elements of the item container, including the item's sprite, name, cost,
+    /// rarity frame, and the on-click action for the purchase button.
+    /// </summary>
     public void Setup(ItemData item, System.Action<ItemData> onSelect)
     {
 
@@ -39,6 +47,10 @@ public class ItemContainerUI : MonoBehaviour
         purchaseButton.onClick.AddListener(() => onSelect(item));
     }
 
+    /// <summary>
+    /// Updates the item container to reflect whether the item has been purchased, disabling
+    /// the purchase button and showing the "PURCHASED" text if applicable.
+    /// </summary>
     public void SetPurchased(bool isPurchased)
     {
         purchaseButton.interactable = !isPurchased;

@@ -52,10 +52,6 @@ public class Enemy : MonoBehaviour
         {
             playerTransform = player.transform;
         }
-        else
-        {
-            Debug.LogError("Player not found.");
-        }
     }
 
 

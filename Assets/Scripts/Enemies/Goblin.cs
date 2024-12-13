@@ -112,5 +112,6 @@ public class Goblin : Enemy
     {
         base.Defeat();
         SoundEffects.Instance.PlaySound(deathSound);
+        GameManager.Instance.IncrementKillCounter("goblin");
     }
 }

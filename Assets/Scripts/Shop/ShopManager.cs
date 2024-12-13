@@ -4,6 +4,10 @@ using System.Linq;
 using TMPro;
 using UnityEngine.UI;
 
+/// <summary>
+/// Manages the shop system, including generating daily and weekly items, displaying available items,
+/// and handling item purchases and UI interactions.
+/// </summary>
 public class ShopManager : MonoBehaviour
 {
     [Header("Rarity Chances")]
@@ -33,14 +37,17 @@ public class ShopManager : MonoBehaviour
     private ItemData selectedItem;
     public TMP_Text totalCoinsText;
 
+    [SerializeField] private AudioClip purchaseSound;
+    [SerializeField] private AudioClip deniedSound;
+    [SerializeField] private AudioClip buttonClickSound;
+
+
+    /// <summary>
+    /// Initializes the shop by generating daily and weekly items if they are not already set,
+    /// and saves the game state.
+    /// </summary>
     private void Start()
     {
-        if (GameManager.Instance == null)
-        {
-            Debug.LogError("GameManager not found!");
-            return;
-        }
-
         if (GameManager.Instance.dailyItems == null || GameManager.Instance.dailyItems.Count == 0)
         {
             GameManager.Instance.dailyItems = GenerateDailyItems().Select(item => item.itemName).ToList();
@@ -54,20 +61,21 @@ public class ShopManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Generates the daily item selection based on rarity chances and unpurchased items,
+    /// ensuring unique items are displayed each day.
+    /// </summary>
     private List<ItemData> GenerateDailyItems()
     {
         List<ItemData> dailyItems = new List<ItemData>();
         int totalSlots = 4;
 
-        // Combine all items into a single pool
         List<ItemData> allItems = commonItems.Concat(rareItems).Concat(mythicalItems).ToList();
 
-        // Check if all items are purchased
         bool allItemsPurchased = allItems.All(item => GameManager.Instance.purchasedItems.Contains(item.itemName));
 
         if (allItemsPurchased)
         {
-            // Randomly select items from the full pool if everything is purchased
             for (int i = 0; i < totalSlots; i++)
             {
                 dailyItems.Add(allItems[Random.Range(0, allItems.Count)]);
@@ -75,15 +83,12 @@ public class ShopManager : MonoBehaviour
             return dailyItems;
         }
 
-        // Filter to include only unpurchased items
         var unpurchasedItems = allItems
             .Where(item => !GameManager.Instance.purchasedItems.Contains(item.itemName))
             .ToList();
 
-        // Shuffle the unpurchased items to randomize order
         unpurchasedItems = unpurchasedItems.OrderBy(_ => Random.value).ToList();
 
-        // Add unpurchased items to the daily list
         foreach (var item in unpurchasedItems)
         {
             if (dailyItems.Count >= totalSlots) break;
@@ -93,20 +98,17 @@ public class ShopManager : MonoBehaviour
             }
         }
 
-        // Fill remaining slots with random items if necessary
         while (dailyItems.Count < totalSlots)
         {
-            // Create a pool of remaining items that aren't already in dailyItems
             var remainingItems = allItems
                 .Where(item => !dailyItems.Any(d => d.itemName == item.itemName))
                 .ToList();
 
             if (remainingItems.Count == 0)
             {
-                remainingItems = allItems; // Fallback to the full pool
+                remainingItems = allItems; 
             }
 
-            // Add a random item from the remaining pool
             dailyItems.Add(remainingItems[Random.Range(0, remainingItems.Count)]);
         }
 
@@ -114,7 +116,9 @@ public class ShopManager : MonoBehaviour
     }
 
 
-
+    /// <summary>
+    /// Selects a weekly item from the pool of mythical items, prioritizing unpurchased items.
+    /// </summary>
     private ItemData GenerateWeeklyItem()
     {
         var unpurchased = mythicalItems
@@ -129,6 +133,10 @@ public class ShopManager : MonoBehaviour
         return mythicalItems.Count > 0 ? mythicalItems[Random.Range(0, mythicalItems.Count)] : null;
     }
 
+    /// <summary>
+    /// Populates the shop UI with daily and weekly items, resolving their data and
+    /// marking purchased items appropriately.
+    /// </summary>
     public void PopulateShop()
     {
         foreach (Transform child in dailyItemsContainer)
@@ -160,7 +168,9 @@ public class ShopManager : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// Resolves an item's data by its name, searching through all item pools.
+    /// </summary>
     public ItemData ResolveItemByName(string itemName)
     {
         foreach (var item in commonItems)
@@ -172,12 +182,16 @@ public class ShopManager : MonoBehaviour
         foreach (var item in mythicalItems)
             if (item.itemName == itemName) return item;
 
-        Debug.LogError($"Item '{itemName}' not found in any item pool.");
         return null;
     }
 
+    /// <summary>
+    /// Opens the item information panel and displays details of the selected item,
+    /// including its name, description, and stats.
+    /// </summary>
     private void OpenItemInfoPanel(ItemData item)
     {
+        SoundEffects.Instance.PlaySound(buttonClickSound);
         selectedItem = item;
 
         itemNameText.text = item.itemName;
@@ -194,7 +208,8 @@ public class ShopManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Attempts to purchase the selected item through the GameManager.
+    /// Attempts to purchase the currently selected item, updating the shop UI and coins if successful.
+    /// Plays a success or denial sound based on the purchase result.
     /// </summary>
     public void PurchaseSelectedItem()
     {
@@ -202,31 +217,38 @@ public class ShopManager : MonoBehaviour
 
         if (GameManager.Instance.PurchaseItem(selectedItem))
         {
-            Debug.Log($"Successfully purchased {selectedItem.itemName}.");
+            SoundEffects.Instance.PlaySound(purchaseSound);
             totalCoinsText.text = $"{GameManager.Instance.coinsDeposited}";
             PopulateShop();
             CloseItemInfoPanel();
         }
         else
         {
-            Debug.LogWarning($"Failed to purchase {selectedItem.itemName}. Not enough coins.");
+            SoundEffects.Instance.PlaySound(deniedSound);
         }
     }
 
-
+    /// <summary>
+    /// Closes the item information panel and resets the selected item.
+    /// </summary>
     public void CloseItemInfoPanel()
     {
-        // Close the ItemInfoPanel
         itemInfoPanel.SetActive(false);
         selectedItem = null;
     }
 
+    /// <summary>
+    /// Opens the shop menu and populates it with available items.
+    /// </summary>
     public void OpenShopMenu()
     {
         shopMenuUI.SetActive(true);
         PopulateShop();
     }
 
+    /// <summary>
+    /// Closes the shop menu.
+    /// </summary>
     public void CloseShopMenu()
     {
         shopMenuUI.SetActive(false);

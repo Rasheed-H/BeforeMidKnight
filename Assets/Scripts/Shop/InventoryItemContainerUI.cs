@@ -2,6 +2,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/// <summary>
+/// Manages the UI for displaying an inventory item, including its appearance, rarity frame,
+/// and interaction for equipping or selecting the item.
+/// </summary>
 public class InventoryItemContainerUI : MonoBehaviour
 {
     public Image frame;                     
@@ -12,8 +16,12 @@ public class InventoryItemContainerUI : MonoBehaviour
 
     public Sprite commonFrame;              
     public Sprite rareFrame;            
-    public Sprite mythicalFrame;            
+    public Sprite mythicalFrame;
 
+    /// <summary>
+    /// Configures the UI for an inventory item, setting its sprite, name, rarity frame, and the 
+    /// on-click action for the select button.
+    /// </summary>
     public void Setup(ItemData item, System.Action<ItemData> onEquip)
     {
         itemSprite.sprite = item.itemSprite;
@@ -36,6 +44,10 @@ public class InventoryItemContainerUI : MonoBehaviour
         selectButton.onClick.AddListener(() => onEquip(item));
     }
 
+    /// <summary>
+    /// Updates the UI to reflect whether the item is equipped, disabling the select button
+    /// and showing the equipped status if applicable.
+    /// </summary>
     public void SetEquipped(bool isEquipped)
     {
         selectButton.interactable = !isEquipped;

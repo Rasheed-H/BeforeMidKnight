@@ -13,6 +13,7 @@ public class PauseController : MonoBehaviour
     private bool isPaused = false;
 
     private PlayerInputActions playerInputActions;
+    [SerializeField] private AudioClip buttonClickSound;
 
     /// <summary>
     /// Initializes input actions for detecting pause inputs.
@@ -63,7 +64,7 @@ public class PauseController : MonoBehaviour
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         isPaused = true;
-        //playerController.EnablePlayerInput(false);
+        UserInput.Instance?.EnableInputs(false);
     }
 
     /// <summary>
@@ -74,7 +75,7 @@ public class PauseController : MonoBehaviour
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
         isPaused = false;
-        //playerController.EnablePlayerInput(true);
+        UserInput.Instance?.EnableInputs(true);
     }
 
     /// <summary>
@@ -86,11 +87,9 @@ public class PauseController : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-    /// <summary>
-    /// Opens the settings menu (currently placeholder functionality).
-    /// </summary>
-    public void OpenSettings()
+
+    public void PlayButtonClickSound()
     {
-        Debug.Log("Settings button pressed");
+        SoundEffects.Instance.PlaySound(buttonClickSound);
     }
 }

@@ -1,6 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
+/// <summary>
+/// Handles user input using Unity's new input system, providing movement, attack, weapon switch,
+/// dash, and pause actions as properties for other scripts to access.
+/// </summary>
 public class UserInput : MonoBehaviour
 {
     public static UserInput Instance { get; private set; }
@@ -16,6 +21,8 @@ public class UserInput : MonoBehaviour
 
     private PlayerInput _playerInput;
 
+    private bool _isInputEnabled = true;
+
     // Input Actions
     private InputAction _moveAction;
     private InputAction _attackUpAction;
@@ -26,6 +33,9 @@ public class UserInput : MonoBehaviour
     private InputAction _dashAction;
     private InputAction _pauseAction;
 
+    /// <summary>
+    /// Ensures a single instance of the UserInput class and initializes the input system by setting up input actions.
+    /// </summary>
     private void Awake()
     {
         if (Instance == null)
@@ -42,6 +52,9 @@ public class UserInput : MonoBehaviour
         SetupInputActions();
     }
 
+    /// <summary>
+    /// Configures the input actions by mapping them to the player's input action asset.
+    /// </summary>
     private void SetupInputActions()
     {
         _moveAction = _playerInput.actions["Move"];
@@ -54,11 +67,39 @@ public class UserInput : MonoBehaviour
         _pauseAction = _playerInput.actions["Pause"];
     }
 
+    /// <summary>
+    /// Updates the input values every frame if input is enabled; otherwise, resets all inputs.
+    /// </summary>
     private void Update()
     {
-        UpdateInputs();
+        if (_isInputEnabled)
+        {
+            UpdateInputs();
+        }
+        else
+        {
+            ResetInputs(); 
+        }
     }
 
+    /// <summary>
+    /// Resets all input values to their default states, effectively disabling all player actions.
+    /// </summary>
+    private void ResetInputs()
+    {
+        MoveInput = Vector2.zero;
+        AttackUpInput = false;
+        AttackDownInput = false;
+        AttackLeftInput = false;
+        AttackRightInput = false;
+        SwitchWeaponInput = false;
+        DashInput = false;
+        PauseInput = false;
+    }
+
+    /// <summary>
+    /// Reads and updates input values for movement, attack directions, weapon switching, dashing, and pausing.
+    /// </summary>
     private void UpdateInputs()
     {
         // Movement
@@ -74,5 +115,13 @@ public class UserInput : MonoBehaviour
         SwitchWeaponInput = _switchWeaponAction.WasPressedThisFrame();
         DashInput = _dashAction.WasPressedThisFrame();
         PauseInput = _pauseAction.WasPressedThisFrame();
+    }
+
+    /// <summary>
+    /// Enables or disables user inputs based on the provided boolean value.
+    /// </summary>
+    public void EnableInputs(bool isEnabled)
+    {
+        _isInputEnabled = isEnabled;
     }
 }

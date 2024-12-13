@@ -19,7 +19,7 @@ MonoBehaviour:
   itemRarity: rare
   statModifiers:
   - statName: dashDistance
-    value: 3
+    value: 2.5
   - statName: dashCooldown
     value: -2
   specialEffects: []

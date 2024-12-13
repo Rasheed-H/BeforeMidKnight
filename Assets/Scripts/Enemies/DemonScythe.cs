@@ -1,5 +1,9 @@
 using UnityEngine;
 
+/// <summary>
+/// Represents the projectile fired by the Demon boss. 
+/// The scythe moves in a straight line, bounces off walls up to a maximum number of times, and damages the player on contact.
+/// </summary>
 public class DemonScythe : MonoBehaviour
 {
     private Rigidbody2D rb; 
@@ -10,13 +14,10 @@ public class DemonScythe : MonoBehaviour
     private int currentBounces = 0; 
     private Vector2 direction; 
 
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        if (rb == null)
-        {
-            Debug.LogError("Rigidbody2D is missing from DemonScythe!");
-        }
     }
 
     /// <summary>
@@ -28,7 +29,6 @@ public class DemonScythe : MonoBehaviour
         direction = initialDirection.normalized;
         rb.velocity = direction * speed; 
         Destroy(gameObject, lifetime); 
-        Debug.Log($"Scythe Initialized with Direction: {direction}");
     }
 
     /// <summary>
@@ -58,7 +58,6 @@ public class DemonScythe : MonoBehaviour
             direction = Vector2.Reflect(direction, contact.normal);
             rb.velocity = direction * speed;
 
-            Debug.Log($"Bounce {currentBounces + 1}: New Direction: {direction}");
             currentBounces++; 
         }
     }

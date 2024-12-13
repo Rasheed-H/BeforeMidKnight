@@ -60,12 +60,6 @@ public class Chest : MonoBehaviour
             totalDropChance += item.dropChance;
         }
 
-        if (totalDropChance != 100f)
-        {
-            Debug.LogError("Total drop chance for items does not add up to 100%.");
-            return;
-        }
-
         int itemsToDrop = Random.Range(minDropItems, maxDropItems + 1);
 
         for (int i = 0; i < itemsToDrop; i++)

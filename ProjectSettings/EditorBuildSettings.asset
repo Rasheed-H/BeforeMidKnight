@@ -6,30 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/UI/MainMenu.unity
+    path: Assets/Scenes/MainMenu.unity
     guid: 4158ca34614e5614bba17aa83f3bbfa7
   - enabled: 1
-    path: Assets/Scenes/UI/GameMenu.unity
+    path: Assets/Scenes/GameMenu.unity
     guid: 3a6da914130aa3d4a8852ccd030abcbd
   - enabled: 1
-    path: Assets/Scenes/UI/GameOverMenu.unity
-    guid: ffcae0d7d16a28749b34b61e5b8baadc
-  - enabled: 1
-    path: Assets/Scenes/DungeonRooms/DungeonMainTest.unity
+    path: Assets/Scenes/Dungeon.unity
     guid: b0c51ee45188aa840a36bfd8879ed577
-  - enabled: 0
-    path: Assets/Scenes/DungeonRooms/DungeonMain.unity
-    guid: 02b12b7d6b540264da7ed3b64e0f8129
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 0
-    path: Assets/Scenes/DungeonRooms/DungeonStart.unity
-    guid: c066938fd5982ed4094d08f85afa5dde
-  - enabled: 0
-    path: Assets/Scenes/DungeonRooms/DungeonEmpty.unity
-    guid: 34408b040e86051409bf315563f66bed
-  - enabled: 0
-    path: Assets/Scenes/DungeonRooms/DungeonEnd.unity
-    guid: fd0865dc34b5b1e4db9da32773479ac5
+  - enabled: 1
+    path: Assets/Scenes/GameOverMenu.unity
+    guid: ffcae0d7d16a28749b34b61e5b8baadc
   m_configObjects: {}

@@ -2398,7 +2398,7 @@ MonoBehaviour:
   - objectPrefab: {fileID: 1509058238147537076, guid: c00903a30b836da49a74a59a372c9bdb, type: 3}
     spawnChance: 25
   minEnemies: 1
-  maxEnemies: 6
+  maxEnemies: 8
 --- !u!1 &1382141904271332457
 GameObject:
   m_ObjectHideFlags: 0

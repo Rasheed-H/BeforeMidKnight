@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Swift Shroom
   itemSprite: {fileID: 21300000, guid: 739c9f3223c43bd42852227681eca92f, type: 3}
-  itemDescription: Increases player move speed.\n\n+2 move speed
+  itemDescription: +2 move speed
   itemPrice: 60
   itemRarity: common
   statModifiers:

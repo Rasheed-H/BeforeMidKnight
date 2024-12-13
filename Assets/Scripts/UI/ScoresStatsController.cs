@@ -3,35 +3,36 @@ using TMPro;
 using System.Collections.Generic;
 using static DbManager;
 
+/// <summary>
+/// Manages the Scores/Stats UI, including displaying score entries, aggregated statistics,
+/// and handling tab navigation between Scores and Stats views.
+/// </summary>
 public class ScoresStatsController : MonoBehaviour
 {
-    // UI References
     public GameObject runEntryPrefab;
     public Transform contentPanel;
     public GameObject ScoreUI;
     public GameObject StatsUI;
-    public TMP_Text statsText; // Reference to the text box in StatsUI for displaying stats
-    public GameObject scoreStatsUI; // Reference to the parent Score/Stats UI
+    public GameObject scoreStatsUI; 
 
-    // Text fields for individual stats in StatsUI
     public TMP_Text highscoreText;
     public TMP_Text recordsText;
     public TMP_Text totalKillsText;
     public TMP_Text goblinKillsText;
     public TMP_Text skeletonKillsText;
-    public TMP_Text spiderKillsText;
+    public TMP_Text ghastKillsText;
     public TMP_Text wizardKillsText;
-    public TMP_Text bossKillsText;
+    public TMP_Text demonKillsText;
 
     /// <summary>
     /// Handles the button click to open the Scores/Stats UI, and displays the scores by default.
     /// </summary>
     public void OnScoresStatsButtonClicked()
     {
-        scoreStatsUI.SetActive(true); // Enable the ScoreStats UI
-        DisplayScores(); // Show scores by default
+        scoreStatsUI.SetActive(true); 
+        DisplayScores(); 
         DisplayStats();
-        OnScoresTabClicked(); // Set Scores tab as active
+        OnScoresTabClicked(); 
     }
 
     /// <summary>
@@ -39,20 +40,19 @@ public class ScoresStatsController : MonoBehaviour
     /// </summary>
     public void DisplayScores()
     {
-        // Clear existing entries in the content area
+
         foreach (Transform child in contentPanel)
         {
             Destroy(child.gameObject);
         }
 
-        // Retrieve run data from the database
+
         List<RunData> runs = DbManager.Instance.GetAllRuns();
 
         foreach (RunData run in runs)
         {
             GameObject newEntry = Instantiate(runEntryPrefab, contentPanel);
 
-            // Find and assign text components for each field in the entry
             TMP_Text idText = newEntry.transform.Find("IDContainer/IDText").GetComponent<TMP_Text>();
             TMP_Text weekText = newEntry.transform.Find("RunContainer/WeekText").GetComponent<TMP_Text>();
             TMP_Text scoreText = newEntry.transform.Find("RunContainer/ScoreText").GetComponent<TMP_Text>();
@@ -60,7 +60,6 @@ public class ScoresStatsController : MonoBehaviour
             TMP_Text coinsText = newEntry.transform.Find("RunContainer/CoinsText").GetComponent<TMP_Text>();
             TMP_Text dateText = newEntry.transform.Find("RunContainer/DateText").GetComponent<TMP_Text>();
 
-            // Populate each field with data from the current run record
             idText.text = $"{run.Id}";
             weekText.text = $"Week: {run.Week}";
             scoreText.text = $"{run.Score}";
@@ -75,10 +74,9 @@ public class ScoresStatsController : MonoBehaviour
     /// </summary>
     public void DisplayStats()
     {
-        // Retrieve stats data from the database
+
         var stats = DbManager.Instance.GetStats();
 
-        // Assign values to individual text fields
         highscoreText.text = $"{stats.HighestScore}";
         recordsText.text = $"Highest Week: {stats.HighestWeek}\n" +
                            $"Total Days: {stats.TotalDays}\n" +
@@ -90,9 +88,9 @@ public class ScoresStatsController : MonoBehaviour
         totalKillsText.text = $"Total: {stats.TotalKills}";
         goblinKillsText.text = $"x{stats.TotalGoblinKills}";
         skeletonKillsText.text = $"x{stats.TotalSkeletonKills}";
-        spiderKillsText.text = $"x{stats.TotalSpiderKills}";
+        ghastKillsText.text = $"x{stats.TotalGhastKills}";
         wizardKillsText.text = $"x{stats.TotalWizardKills}";
-        bossKillsText.text = $"x{stats.TotalBossKills}";
+        demonKillsText.text = $"x{stats.TotalDemonKills}";
     }
 
     /// <summary>
