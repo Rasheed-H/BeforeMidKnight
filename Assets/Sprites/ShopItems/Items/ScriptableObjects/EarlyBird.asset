@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Alarm Clock
   itemSprite: {fileID: 21300000, guid: f870854c74a084c478226d5f72c1f424, type: 3}
-  itemDescription: 'Special: Early Bird\n\n Start the dungeon at 3:00 PM (+5min dungeon
-    time)'
+  itemDescription: 'Special: <b>Early Bird</b>\n\n Start the dungeon at 3:00 PM\n(+5min
+    dungeon time)'
   itemPrice: 40
   itemRarity: common
   statModifiers: []

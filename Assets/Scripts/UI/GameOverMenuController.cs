@@ -1,11 +1,8 @@
-using UnityEngine;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine;
 
-/// <summary>
-/// Controls the game over menu, displaying the player's score, weeks survived, kills, escapes, deaths,
-/// and coins deposited. Allows navigation back to the main menu and saves the run data in the database.
-/// </summary>
 public class GameOverMenuController : MonoBehaviour
 {
     [Header("UI Elements")]
@@ -16,15 +13,12 @@ public class GameOverMenuController : MonoBehaviour
     public TMP_Text coinDepositedText;
     public TMP_Text totalKillsText;
 
-    private int score;
-    private int totalKills;
-
     [SerializeField] private AudioClip buttonClickSound;
     [SerializeField] private AudioClip gameOverSound;
 
-    /// <summary>
-    /// Initializes the game over menu by calculating the score and total kills, then updating the UI elements.
-    /// </summary>
+    private int score;
+    private int totalKills;
+
     private void Start()
     {
         MusicManager.Instance.StopMusic();
@@ -39,9 +33,6 @@ public class GameOverMenuController : MonoBehaviour
         UpdateText();
     }
 
-    /// <summary>
-    /// Updates the UI with values from GameManager and calculated score and kills.
-    /// </summary>
     private void UpdateText()
     {
         weeksText.text = $"Weeks Survived: {GameManager.Instance.currentWeek}";
@@ -52,13 +43,10 @@ public class GameOverMenuController : MonoBehaviour
         scoreText.text = $"{score}";
     }
 
-    /// <summary>
-    /// Handles the main menu button click, saving the run and stats to the database,
-    /// resetting the game state, and loading the main menu scene.
-    /// </summary>
     public void OnMainMenuClicked()
     {
-        DbManager.Instance.InsertRun(
+        
+        DbManager.Instance.SaveRun(
             score,
             GameManager.Instance.currentWeek,
             GameManager.Instance.deaths,
@@ -67,23 +55,37 @@ public class GameOverMenuController : MonoBehaviour
             totalKills
         );
 
-        DbManager.Instance.UpdateStats(
-            score,
-            GameManager.Instance.currentWeek,
-            GameManager.Instance.totalDays,
-            GameManager.Instance.totalCoinsDeposited,
-            GameManager.Instance.totalCoinsLost,
-            GameManager.Instance.deaths,
-            GameManager.Instance.escapes,
-            totalKills,
-            GameManager.Instance.goblinKills,
-            GameManager.Instance.skeletonKills,
-            GameManager.Instance.ghastKills,
-            GameManager.Instance.wizardKills,
-            GameManager.Instance.demonKills
+        
+        DbManager.Instance.SaveStats(
+            highestScore: score,
+            highestWeek: GameManager.Instance.currentWeek,
+            totalDays: GameManager.Instance.totalDays,
+            totalCoinsDeposited: GameManager.Instance.totalCoinsDeposited,
+            totalCoinsLost: GameManager.Instance.totalCoinsLost,
+            totalDeaths: GameManager.Instance.deaths,
+            totalEscapes: GameManager.Instance.escapes,
+            totalKills: totalKills,
+            totalGoblinKills: GameManager.Instance.goblinKills,
+            totalSkeletonKills: GameManager.Instance.skeletonKills,
+            totalGhastKills: GameManager.Instance.ghastKills,
+            totalWizardKills: GameManager.Instance.wizardKills,
+            totalDemonKills: GameManager.Instance.demonKills,
+            callback: success =>
+            {
+                if (success)
+                {
+                    Debug.Log("Stats updated successfully.");
+                }
+                else
+                {
+                    Debug.LogError("Failed to update stats.");
+                }
+            }
         );
 
+        
         GameManager.Instance.ResetGameState();
+
         SceneManager.LoadScene("MainMenu");
     }
 

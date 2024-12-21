@@ -1,295 +1,497 @@
-using UnityEngine;
-using System.Data;
-using System.Data.SQLite;
-using System.IO;
-using System.Collections.Generic;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Networking;
+
 
 /// <summary>
-/// Manages database operations for saving and retrieving game data.
-/// This singleton class ensures a single instance of DbManager persists across scenes
-/// and handles the creation, insertion, and management of the SQLite database.
+/// Manages all database-related interactions, such as creating users, saving runs, and fetching or updating stats.
+/// This class ensures seamless integration with the backend API.
 /// </summary>
 public class DbManager : MonoBehaviour
 {
-    private static DbManager _instance;
-    private string dbPath;
+    public static DbManager Instance;
+    private string guestId;
+    private const string BaseUrl = "https://before-midknight.rf.gd/api/api.php";
+    private int userId;
+
 
     /// <summary>
-    /// Provides access to the single DbManager instance, creating it if it doesn't exist.
-    /// </summary>
-    public static DbManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                GameObject dbManager = new GameObject("DatabaseManager");
-                _instance = dbManager.AddComponent<DbManager>();
-                DontDestroyOnLoad(dbManager);
-            }
-            return _instance;
-        }
-    }
-
-    /// <summary>
-    /// Initializes the database path and creates the database with necessary tables if it does not exist.
+    /// Initializes the DbManager instance and ensures only one instance exists throughout the game.
+    /// Automatically gets or creates a user on startup.
     /// </summary>
     private void Awake()
     {
-        dbPath = "URI=file:" + Application.persistentDataPath + "/gameData.db";
-        CreateDatabase();
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            GetOrCreateUser(); 
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     /// <summary>
-    /// Creates the database tables for runs and stats if they do not already exist.
+    /// Retrieves the existing user or creates a new one if no user exists.
+    /// Uses PlayerPrefs to store and retrieve the guest ID.
     /// </summary>
-    private void CreateDatabase()
+    private void GetOrCreateUser()
     {
-        using (var connection = new SQLiteConnection(dbPath))
+        if (!PlayerPrefs.HasKey("GuestId"))
         {
-            connection.Open();
-            using (var command = connection.CreateCommand())
+            guestId = Guid.NewGuid().ToString();
+            PlayerPrefs.SetString("GuestId", guestId);
+            StartCoroutine(InsertUserIntoDatabase(guestId)); 
+            Debug.Log($"Guest Created: {guestId}");
+        }
+        else
+        {
+            guestId = PlayerPrefs.GetString("GuestId");
+            Debug.Log($"Guest Exists: {guestId}");
+            StartCoroutine(VerifyUser(guestId));
+        }
+    }
+
+    /// <summary>
+    /// Sends a request to insert a new user into the database.
+    /// </summary>
+    /// <param name="guestId">The unique guest ID to associate with the user.</param>
+    private IEnumerator InsertUserIntoDatabase(string guestId)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("guest_id", guestId);
+
+        using (UnityWebRequest request = UnityWebRequest.Post($"{BaseUrl}?action=create-user", form))
+        {
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
             {
-                // Create the Runs table
-                command.CommandText = @"CREATE TABLE IF NOT EXISTS Runs (
-                                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                    Score INTEGER,
-                                    Week INTEGER,
-                                    Deaths INTEGER,
-                                    Escapes INTEGER,
-                                    TotalCoinsDeposited INTEGER,
-                                    Kills INTEGER,
-                                    Date TEXT)";
-                command.ExecuteNonQuery();
+                Debug.Log($"InsertUserIntoDatabase Response: {request.downloadHandler.text}");
+                UserInsertResponse response = JsonUtility.FromJson<UserInsertResponse>(request.downloadHandler.text);
 
-                // Create the Stats table
-                command.CommandText = @"CREATE TABLE IF NOT EXISTS Stats (
-                                    Id INTEGER PRIMARY KEY,
-                                    HighestScore INTEGER DEFAULT 0,
-                                    HighestWeek INTEGER DEFAULT 0,
-                                    TotalDays INTEGER DEFAULT 0,
-                                    TotalCoinsDeposited INTEGER DEFAULT 0,
-                                    TotalCoinsLost INTEGER DEFAULT 0,
-                                    TotalDeaths INTEGER DEFAULT 0,
-                                    TotalEscapes INTEGER DEFAULT 0,
-                                    TotalKills INTEGER DEFAULT 0,
-                                    TotalGoblinKills INTEGER DEFAULT 0,
-                                    TotalSkeletonKills INTEGER DEFAULT 0,
-                                    TotalGhastKills INTEGER DEFAULT 0,
-                                    TotalWizardKills INTEGER DEFAULT 0,
-                                    TotalDemonKills INTEGER DEFAULT 0)";
-                command.ExecuteNonQuery();
-
-                // Insert initial row with all 0s if it doesn't already exist
-                command.CommandText = @"INSERT OR IGNORE INTO Stats 
-                                    (Id, HighestScore, HighestWeek, TotalDays, TotalCoinsDeposited, TotalCoinsLost, TotalDeaths, 
-                                     TotalEscapes, TotalKills, TotalGoblinKills, TotalSkeletonKills, TotalGhastKills, 
-                                     TotalWizardKills, TotalDemonKills) 
-                                    VALUES 
-                                    (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)";
-                command.ExecuteNonQuery();
-
-
-                //insert 10 random runs
-                command.CommandText = "SELECT COUNT(*) FROM Runs";
-                int runCount = Convert.ToInt32(command.ExecuteScalar());
-
-                if (runCount == 0)
+                if (response.success)
                 {
-                    for (int i = 0; i < 10; i++)
-                    {
-                        command.CommandText = @"INSERT INTO Runs (Score, Week, Deaths, Escapes, TotalCoinsDeposited, Kills, Date)
-                                VALUES (@score, @week, @deaths, @escapes, @coinsDeposited, @kills, @date)";
-                        command.Parameters.Clear();
-                        command.Parameters.Add(new SQLiteParameter("@score", UnityEngine.Random.Range(100, 1000))); 
-                        command.Parameters.Add(new SQLiteParameter("@week", UnityEngine.Random.Range(1, 5))); 
-                        command.Parameters.Add(new SQLiteParameter("@deaths", UnityEngine.Random.Range(0, 3))); 
-                        command.Parameters.Add(new SQLiteParameter("@escapes", UnityEngine.Random.Range(0, 2))); 
-                        command.Parameters.Add(new SQLiteParameter("@coinsDeposited", UnityEngine.Random.Range(100, 500))); 
-                        command.Parameters.Add(new SQLiteParameter("@kills", UnityEngine.Random.Range(10, 50))); 
-                        command.Parameters.Add(new SQLiteParameter("@date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
-                        command.ExecuteNonQuery();
-                    }
+                    userId = response.user_id; 
+                    Debug.Log($"User created with UserId: {userId}");
+
+                    StartCoroutine(InitializeStats(userId));
+                    StartCoroutine(CreateRandomRuns(userId));
+                }
+                else
+                {
+                    Debug.LogError($"InsertUserIntoDatabase failed: {response.error}");
                 }
             }
-        }
-    }
-
-    /// <summary>
-    /// Inserts a new run entry into the Runs table with details from the player's current run.
-    /// </summary>
-    public void InsertRun(int score, int week, int deaths, int escapes, int totalCoinsDeposited, int kills)
-    {
-        using (var connection = new SQLiteConnection(dbPath))
-        {
-            connection.Open();
-            using (var command = connection.CreateCommand())
+            else
             {
-                command.CommandText = "INSERT INTO Runs (Score, Week, Deaths, Escapes, TotalCoinsDeposited, Kills, Date) VALUES (@score, @week, @deaths, @escapes, @totalCoinsDeposited, @kills, @date)";
-                command.Parameters.Add(new SQLiteParameter("@score", score));
-                command.Parameters.Add(new SQLiteParameter("@week", week));
-                command.Parameters.Add(new SQLiteParameter("@deaths", deaths));
-                command.Parameters.Add(new SQLiteParameter("@escapes", escapes));
-                command.Parameters.Add(new SQLiteParameter("@totalCoinsDeposited", totalCoinsDeposited));
-                command.Parameters.Add(new SQLiteParameter("@kills", kills));
-                command.Parameters.Add(new SQLiteParameter("@date", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
-                command.ExecuteNonQuery();
+                Debug.LogError($"InsertUserIntoDatabase Error: {request.error}");
             }
         }
     }
 
     /// <summary>
-    /// Updates the Stats table with cumulative values and higher values where applicable.
+    /// Verifies if the user exists in the database. If not, creates a new user.
     /// </summary>
-    public void UpdateStats(int highestScore, int highestWeek, int totalDays, int totalCoinsDeposited, int totalCoinsLost, int totalDeaths, int totalEscapes, int totalKills, int totalGoblinKills, int totalSkeletonKills, int totalGhastKills, int totalWizardKills, int totalDemonKills)
+    /// <param name="guestId">The unique guest ID to verify.</param>
+    private IEnumerator VerifyUser(string guestId)
     {
-        using (var connection = new SQLiteConnection(dbPath))
+        using (UnityWebRequest request = UnityWebRequest.Get($"{BaseUrl}?action=get-user&guest_id={guestId}"))
         {
-            connection.Open();
-            using (var command = connection.CreateCommand())
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
             {
-                command.CommandText = @"UPDATE Stats SET 
-                                        HighestScore = MAX(HighestScore, @highestScore), 
-                                        HighestWeek = MAX(HighestWeek, @highestWeek), 
-                                        TotalDays = TotalDays + @totalDays, 
-                                        TotalCoinsDeposited = TotalCoinsDeposited + @totalCoinsDeposited, 
-                                        TotalCoinsLost = TotalCoinsLost + @totalCoinsLost, 
-                                        TotalDeaths = TotalDeaths + @totalDeaths, 
-                                        TotalEscapes = TotalEscapes + @totalEscapes, 
-                                        TotalKills = TotalKills + @totalKills, 
-                                        TotalGoblinKills = TotalGoblinKills + @totalGoblinKills, 
-                                        TotalSkeletonKills = TotalSkeletonKills + @totalSkeletonKills, 
-                                        TotalGhastKills = TotalGhastKills + @totalGhastKills, 
-                                        TotalWizardKills = TotalWizardKills + @totalWizardKills, 
-                                        TotalDemonKills = TotalDemonKills + @totalDemonKills
-                                        WHERE Id = 1";
-                command.Parameters.Add(new SQLiteParameter("@highestScore", highestScore));
-                command.Parameters.Add(new SQLiteParameter("@highestWeek", highestWeek));
-                command.Parameters.Add(new SQLiteParameter("@totalDays", totalDays));
-                command.Parameters.Add(new SQLiteParameter("@totalCoinsDeposited", totalCoinsDeposited));
-                command.Parameters.Add(new SQLiteParameter("@totalCoinsLost", totalCoinsLost));
-                command.Parameters.Add(new SQLiteParameter("@totalDeaths", totalDeaths));
-                command.Parameters.Add(new SQLiteParameter("@totalEscapes", totalEscapes));
-                command.Parameters.Add(new SQLiteParameter("@totalKills", totalKills));
-                command.Parameters.Add(new SQLiteParameter("@totalGoblinKills", totalGoblinKills));
-                command.Parameters.Add(new SQLiteParameter("@totalSkeletonKills", totalSkeletonKills));
-                command.Parameters.Add(new SQLiteParameter("@totalGhastKills", totalGhastKills));
-                command.Parameters.Add(new SQLiteParameter("@totalWizardKills", totalWizardKills));
-                command.Parameters.Add(new SQLiteParameter("@totalDemonKills", totalDemonKills));
-                command.ExecuteNonQuery();
-            }
-        }
-    }
+                Debug.Log($"VerifyUser Response: {request.downloadHandler.text}");
+                UserResponse response = JsonUtility.FromJson<UserResponse>(request.downloadHandler.text);
 
-    /// <summary>
-    /// Represents the structure of a run entry in the Runs table, containing details about
-    /// a specific gameplay session.
-    /// </summary>
-    public class RunData
-    {
-        public int Id;
-        public int Score;
-        public int Week;
-        public int Deaths;
-        public int Escapes;
-        public int TotalCoinsDeposited;
-        public int Kills;
-        public string Date;
-    }
-
-    /// <summary>
-    /// Retrieves all run entries from the Runs table, ordered by their ID in descending order.
-    /// </summary>
-    /// <returns>A list of `RunData` objects containing details of each run.</returns>
-    public List<RunData> GetAllRuns()
-    {
-        List<RunData> runs = new List<RunData>();
-
-        using (var connection = new SQLiteConnection(dbPath))
-        {
-            connection.Open();
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = "SELECT Id, Score, Week, Deaths, Escapes, TotalCoinsDeposited, Kills, Date FROM Runs ORDER BY Id DESC";
-                using (var reader = command.ExecuteReader())
+                if (response.success)
                 {
-                    while (reader.Read())
-                    {
-                        RunData run = new RunData
-                        {
-                            Id = reader.GetInt32(0),
-                            Score = reader.GetInt32(1),
-                            Week = reader.GetInt32(2),
-                            Deaths = reader.GetInt32(3),
-                            Escapes = reader.GetInt32(4),
-                            TotalCoinsDeposited = reader.GetInt32(5),
-                            Kills = reader.GetInt32(6),
-                            Date = reader.GetString(7)
-                        };
-                        runs.Add(run);
-                    }
+                    userId = response.user.id; 
+                    Debug.Log($"User verified with UserId: {userId}");
+                }
+                else
+                {
+                    Debug.Log($"User not in database. Creating a new user.");
+                    StartCoroutine(InsertUserIntoDatabase(guestId));
                 }
             }
+            else
+            {
+                Debug.LogError($"VerifyUser Error: {request.error}");
+            }
         }
-        return runs;
     }
 
     /// <summary>
-    /// Retrieves the current stats data from the database.
+    /// Creates 10 random runs for the user in the database for testing purposes.
     /// </summary>
-    public StatsData GetStats()
+    /// <param name="userId">The user ID to associate the runs with.</param>
+    private IEnumerator CreateRandomRuns(int userId)
     {
-        StatsData stats = new StatsData();
-
-        using (var connection = new SQLiteConnection(dbPath))
+        for (int i = 0; i < 10; i++)
         {
-            connection.Open();
-            using (var command = connection.CreateCommand())
+            WWWForm form = new WWWForm();
+            var week = UnityEngine.Random.Range(1, 10);
+            var tcd = UnityEngine.Random.Range(50, 500);
+            var score = week * tcd;
+            form.AddField("user_id", userId);
+            form.AddField("score", score);
+            form.AddField("week", week);
+            form.AddField("deaths", UnityEngine.Random.Range(0, 50));
+            form.AddField("escapes", UnityEngine.Random.Range(0, 50));
+            form.AddField("total_coins_deposited", tcd);
+            form.AddField("kills", UnityEngine.Random.Range(10, 250));
+
+            using (UnityWebRequest request = UnityWebRequest.Post($"{BaseUrl}?action=create-run", form))
             {
-                command.CommandText = "SELECT * FROM Stats WHERE Id = 1";
-                using (var reader = command.ExecuteReader())
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
                 {
-                    if (reader.Read())
-                    {
-                        stats.HighestScore = reader.GetInt32(reader.GetOrdinal("HighestScore"));
-                        stats.HighestWeek = reader.GetInt32(reader.GetOrdinal("HighestWeek"));
-                        stats.TotalDays = reader.GetInt32(reader.GetOrdinal("TotalDays"));
-                        stats.TotalCoinsDeposited = reader.GetInt32(reader.GetOrdinal("TotalCoinsDeposited"));
-                        stats.TotalCoinsLost = reader.GetInt32(reader.GetOrdinal("TotalCoinsLost"));
-                        stats.TotalDeaths = reader.GetInt32(reader.GetOrdinal("TotalDeaths"));
-                        stats.TotalEscapes = reader.GetInt32(reader.GetOrdinal("TotalEscapes"));
-                        stats.TotalKills = reader.GetInt32(reader.GetOrdinal("TotalKills"));
-                        stats.TotalGoblinKills = reader.GetInt32(reader.GetOrdinal("TotalGoblinKills"));
-                        stats.TotalSkeletonKills = reader.GetInt32(reader.GetOrdinal("TotalSkeletonKills"));
-                        stats.TotalGhastKills = reader.GetInt32(reader.GetOrdinal("TotalGhastKills"));
-                        stats.TotalWizardKills = reader.GetInt32(reader.GetOrdinal("TotalWizardKills"));
-                        stats.TotalDemonKills = reader.GetInt32(reader.GetOrdinal("TotalDemonKills"));
-                    }
+                    Debug.Log($"Run {i + 1} insert response: {request.downloadHandler.text}");
+                }
+                else
+                {
+                    Debug.LogError($"Error creating run {i + 1}: {request.error}");
                 }
             }
         }
 
-        return stats;
+        Debug.Log("All random runs have been created.");
     }
 
     /// <summary>
-    /// Class representing the structure of the Stats table.
+    /// Retrieves all runs for the current user from the database.
     /// </summary>
-    public class StatsData
+    /// <param name="callback">Callback function to handle the list of runs.</param>
+    public void GetRuns(System.Action<List<RunData>> callback)
     {
-        public int HighestScore;
-        public int HighestWeek;
-        public int TotalDays;
-        public int TotalCoinsDeposited;
-        public int TotalCoinsLost;
-        public int TotalDeaths;
-        public int TotalEscapes;
-        public int TotalKills;
-        public int TotalGoblinKills;
-        public int TotalSkeletonKills;
-        public int TotalGhastKills;
-        public int TotalWizardKills;
-        public int TotalDemonKills;
+        StartCoroutine(GetRunsCoroutine(callback));
+    }
+
+    /// <summary>
+    /// Coroutine to fetch runs data from the database.
+    /// </summary>
+    /// <param name="callback">Callback function to handle the list of runs.</param>
+    private IEnumerator GetRunsCoroutine(System.Action<List<RunData>> callback)
+    {
+        using (UnityWebRequest request = UnityWebRequest.Get($"{BaseUrl}?action=get-runs&user_id={userId}"))
+        {
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log($"GetRuns Response: {request.downloadHandler.text}");
+                RunListResponse response = JsonUtility.FromJson<RunListResponse>(request.downloadHandler.text);
+
+                if (response.success)
+                {
+                    Debug.Log($"Received {response.runs.Count} runs.");
+                    callback?.Invoke(response.runs);
+                }
+                else
+                {
+                    Debug.LogError($"GetRuns failed: {response.error}");
+                    callback?.Invoke(new List<RunData>());
+                }
+            }
+            else
+            {
+                Debug.LogError($"GetRuns Error: {request.error}");
+                callback?.Invoke(new List<RunData>()); 
+            }
+        }
+    }
+
+    /// <summary>
+    /// Initializes stats for the user in the database.
+    /// </summary>
+    /// <param name="userId">The user ID to associate the stats with.</param>
+    private IEnumerator InitializeStats(int userId)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("user_id", userId);
+
+        using (UnityWebRequest request = UnityWebRequest.Post($"{BaseUrl}?action=create-stats", form))
+        {
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log($"InitializeStats Response: {request.downloadHandler.text}");
+                StatsResponse response = JsonUtility.FromJson<StatsResponse>(request.downloadHandler.text);
+
+                if (response.success)
+                {
+                    Debug.Log("Stats successfully initialized.");
+                }
+                else
+                {
+                    Debug.LogError($"InitializeStats failed: {response.error}");
+                }
+            }
+            else
+            {
+                Debug.LogError($"InitializeStats Error: {request.error}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Fetches the stats for the current user from the database.
+    /// </summary>
+    /// <param name="callback">Callback function to handle the stats data.</param>
+    public void GetStats(System.Action<StatsData> callback)
+    {
+        StartCoroutine(GetStatsCoroutine(callback));
+    }
+
+    /// <summary>
+    /// Coroutine to fetch stats data from the database.
+    /// </summary>
+    /// <param name="callback">Callback function to handle the stats data.</param>
+    private IEnumerator GetStatsCoroutine(System.Action<StatsData> callback)
+    {
+        using (UnityWebRequest request = UnityWebRequest.Get($"{BaseUrl}?action=get-stats&user_id={userId}"))
+        {
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log($"GetStats Response: {request.downloadHandler.text}");
+
+                try
+                {
+                    StatsResponse response = JsonUtility.FromJson<StatsResponse>(request.downloadHandler.text);
+
+                    if (response != null && response.success)
+                    {
+                        StatsData stats = response.stats;
+                        callback?.Invoke(stats);
+                    }
+                    else
+                    {
+                        Debug.LogError("Invalid stats data in response.");
+                        callback?.Invoke(null);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"Error parsing stats: {e.Message}");
+                    callback?.Invoke(null);
+                }
+            }
+            else
+            {
+                Debug.LogError($"GetStats Error: {request.error}");
+                callback?.Invoke(null);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Saves a run to the database with details such as score, week, deaths, escapes, and kills.
+    /// </summary>
+    /// <param name="score">The score for the run.</param>
+    /// <param name="week">The week in which the run occurred.</param>
+    /// <param name="deaths">The number of deaths during the run.</param>
+    /// <param name="escapes">The number of escapes during the run.</param>
+    /// <param name="totalCoinsDeposited">The total coins deposited during the run.</param>
+    /// <param name="totalKills">The total kills during the run.</param>
+    public void SaveRun(int score, int week, int deaths, int escapes, int totalCoinsDeposited, int totalKills)
+    {
+        StartCoroutine(SaveRunCoroutine(score, week, deaths, escapes, totalCoinsDeposited, totalKills));
+    }
+
+    /// <summary>
+    /// Coroutine to handle saving a run to the database.
+    /// </summary>
+    private IEnumerator SaveRunCoroutine(int score, int week, int deaths, int escapes, int totalCoinsDeposited, int totalKills)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("user_id", userId);
+        form.AddField("score", score);
+        form.AddField("week", week);
+        form.AddField("deaths", deaths);
+        form.AddField("escapes", escapes);
+        form.AddField("total_coins_deposited", totalCoinsDeposited);
+        form.AddField("kills", totalKills);
+
+        using (UnityWebRequest request = UnityWebRequest.Post($"{BaseUrl}?action=create-run", form))
+        {
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log($"Run saved successfully: {request.downloadHandler.text}");
+            }
+            else
+            {
+                Debug.LogError($"Error saving run: {request.error}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Saves the stats to the database.
+    /// </summary>
+    public void SaveStats(int highestScore, int highestWeek, int totalDays, int totalCoinsDeposited, int totalCoinsLost, int totalDeaths, int totalEscapes, int totalKills, int totalGoblinKills, int totalSkeletonKills, int totalGhastKills, int totalWizardKills, int totalDemonKills, System.Action<bool> callback = null)
+    {
+        StartCoroutine(SaveStatsCoroutine(highestScore, highestWeek, totalDays, totalCoinsDeposited, totalCoinsLost, totalDeaths, totalEscapes, totalKills, totalGoblinKills, totalSkeletonKills, totalGhastKills, totalWizardKills, totalDemonKills, callback));
+    }
+
+    /// <summary>
+    /// Coroutine to save stats to the database.
+    /// </summary>
+    private IEnumerator SaveStatsCoroutine(int highestScore, int highestWeek, int totalDays, int totalCoinsDeposited, int totalCoinsLost, int totalDeaths, int totalEscapes, int totalKills, int totalGoblinKills, int totalSkeletonKills, int totalGhastKills, int totalWizardKills, int totalDemonKills, System.Action<bool> callback)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("user_id", userId);
+        form.AddField("highest_score", highestScore);
+        form.AddField("highest_week", highestWeek);
+        form.AddField("total_days", totalDays);
+        form.AddField("total_coins_deposited", totalCoinsDeposited);
+        form.AddField("total_coins_lost", totalCoinsLost);
+        form.AddField("total_deaths", totalDeaths);
+        form.AddField("total_escapes", totalEscapes);
+        form.AddField("total_kills", totalKills);
+        form.AddField("total_goblin_kills", totalGoblinKills);
+        form.AddField("total_skeleton_kills", totalSkeletonKills);
+        form.AddField("total_ghast_kills", totalGhastKills);
+        form.AddField("total_wizard_kills", totalWizardKills);
+        form.AddField("total_demon_kills", totalDemonKills);
+
+        using (UnityWebRequest request = UnityWebRequest.Put($"{BaseUrl}?action=update-stats", form.data))
+        {
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log($"Stats updated successfully: {request.downloadHandler.text}");
+                StatsResponse response = JsonUtility.FromJson<StatsResponse>(request.downloadHandler.text);
+
+                if (response.success)
+                {
+                    callback?.Invoke(true);
+                }
+                else
+                {
+                    Debug.LogError($"API error: {response.error}");
+                    callback?.Invoke(false);
+                }
+            }
+            else
+            {
+                Debug.LogError($"SaveStats Error: {request.error}");
+                callback?.Invoke(false);
+            }
+        }
     }
 }
+
+/// <summary>
+/// Response for user-related requests.
+/// Contains information about success, the user object, and any error messages.
+/// </summary>
+[System.Serializable]
+public class UserResponse
+{
+    public bool success;
+    public User user;
+    public string error;
+}
+
+/// <summary>
+/// Represents a user in the database.
+/// </summary>
+[System.Serializable]
+public class User
+{
+    public int id;
+    public string guest_id;
+    public string created_at;
+}
+
+/// <summary>
+/// Response for user creation requests.
+/// Contains success status, the user ID, and any error messages.
+/// </summary>
+[System.Serializable]
+public class UserInsertResponse
+{
+    public bool success;
+    public int user_id;
+    public string error;
+}
+
+/// <summary>
+/// Response for stats-related requests.
+/// Contains information about success, the stats object, and any error messages.
+/// </summary>
+[System.Serializable]
+public class StatsResponse
+{
+    public bool success;
+    public StatsData stats;
+    public string error;
+}
+
+/// <summary>
+/// Response for fetching runs data.
+/// Contains information about success, a list of runs, and any error messages.
+/// </summary>
+[System.Serializable]
+public class RunListResponse
+{
+    public bool success;
+    public List<RunData> runs;
+    public string error;
+}
+
+/// <summary>
+/// Represents a single run in the database.
+/// </summary>
+[System.Serializable]
+public class RunData
+{
+    public int id;
+    public int user_id;
+    public int score;
+    public int week;
+    public int deaths;
+    public int escapes;
+    public int total_coins_deposited;
+    public int kills;
+    public string date;
+}
+
+/// <summary>
+/// Represents stats data for a user.
+/// </summary>
+[System.Serializable]
+public class StatsData
+{
+    public int highest_score;
+    public int highest_week;
+    public int total_days;
+    public int total_coins_deposited;
+    public int total_coins_lost;
+    public int total_deaths;
+    public int total_escapes;
+    public int total_kills;
+    public int total_goblin_kills;
+    public int total_skeleton_kills;
+    public int total_ghast_kills;
+    public int total_wizard_kills;
+    public int total_demon_kills;
+}
+
+

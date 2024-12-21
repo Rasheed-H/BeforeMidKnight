@@ -34,7 +34,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5940986234086375958}
+  - {fileID: 4823442002297021527}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &9031743887251129558
@@ -214,7 +214,7 @@ MonoBehaviour:
     dropChance: 3
   takeDamageSound: {fileID: 8300000, guid: e49547f31b6fa8647ae7a4cfc4a93b46, type: 3}
   deathSound: {fileID: 8300000, guid: cb16bccc29066664d9cc04f3151a4fcf, type: 3}
---- !u!1 &2705653824082546017
+--- !u!1 &6506067132136256537
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -222,22 +222,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5940986234086375958}
-  - component: {fileID: 9090395961882971518}
+  - component: {fileID: 4823442002297021527}
+  - component: {fileID: 6753494394526365976}
   m_Layer: 12
-  m_Name: Hitbox
+  m_Name: HitBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5940986234086375958
+--- !u!4 &4823442002297021527
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2705653824082546017}
+  m_GameObject: {fileID: 6506067132136256537}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -246,13 +246,13 @@ Transform:
   m_Children: []
   m_Father: {fileID: 589725022948339972}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!70 &9090395961882971518
+--- !u!70 &6753494394526365976
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2705653824082546017}
+  m_GameObject: {fileID: 6506067132136256537}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
@@ -278,6 +278,6 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.000000029802322, y: -0.107155085}
-  m_Size: {x: 0.5494562, y: 0.78568983}
+  m_Offset: {x: 0, y: -0.11420992}
+  m_Size: {x: 0.5, y: 0.57057077}
   m_Direction: 0

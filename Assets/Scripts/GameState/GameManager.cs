@@ -212,7 +212,7 @@ public class GameManager : MonoBehaviour
         statList.Add(new Stat("slashCooldown", 3f));
         statList.Add(new Stat("daggerDamage", 15)); 
         statList.Add(new Stat("daggerSpeed", 10f));
-        statList.Add(new Stat("daggerCooldown", 1.5f));
+        statList.Add(new Stat("daggerCooldown", 2f));
         statList.Add(new Stat("dashSpeed", 10f));
         statList.Add(new Stat("dashDamage", 10));
         statList.Add(new Stat("dashCooldown", 4.5f));
@@ -220,15 +220,15 @@ public class GameManager : MonoBehaviour
         statList.Add(new Stat("treasureRoomChance", 0.1f));
 
         // dungeon properties
-        dungeonRoomCount = 8; //8
-        goblinHealth = 20; //20
+        dungeonRoomCount = 6; //6
+        goblinHealth = 30; //30
         goblinSpeed = 4f; //4
-        skeletonHealth = 15; //15
+        skeletonHealth = 20; //20
         skeletonFireRate = 1f; //1
-        ghastWaitTime = 3.5f; //3.5
-        wizardHealth = 20; //20
+        ghastWaitTime = 3f; //3
+        wizardHealth = 35; //35
         wizardProjSpeed = 1f; //1
-        demonHealth = 160; //160
+        demonHealth = 175; //175
 
         SaveGameState();
     }
@@ -238,7 +238,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void scaleDungeon()
     {
-        dungeonRoomCount += 4;
+        dungeonRoomCount += 2;
         
         // Scale Goblin properties
         goblinHealth += 10;
@@ -246,14 +246,14 @@ public class GameManager : MonoBehaviour
 
         // Scale Skeleton properties
         skeletonHealth += 10; // No cap
-        skeletonFireRate = Mathf.Min(skeletonFireRate + 0.5f, 4f); // Cap at 4
+        skeletonFireRate = Mathf.Min(skeletonFireRate + 0.5f, 3f); // Cap at 3
 
         // Scale Ghast properties
         ghastWaitTime = Mathf.Max(ghastWaitTime - 0.5f, 1f); // Cap at 1 (decreasing)
 
         // Scale Wizard properties
         wizardHealth += 10; // No cap
-        wizardProjSpeed = Mathf.Max(wizardProjSpeed + 2f, 16f); // Cap at 16
+        wizardProjSpeed = Mathf.Max(wizardProjSpeed + 2f, 9f); // Cap at 9
 
         // Scale Demon properties
         demonHealth += 75; // No cap

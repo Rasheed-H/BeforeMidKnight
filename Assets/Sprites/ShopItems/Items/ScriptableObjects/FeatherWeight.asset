@@ -20,6 +20,6 @@ MonoBehaviour:
   statModifiers:
   - statName: playerMaxHealth
     value: -3
-  - statName: playMoveSpeed
+  - statName: playerMoveSpeed
     value: 4
   specialEffects: []

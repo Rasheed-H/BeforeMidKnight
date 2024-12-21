@@ -1,48 +1,47 @@
-using System.IO;
 using UnityEngine;
 
 /// <summary>
-/// Handles saving, loading, and deleting game data using a JSON file stored in persistent storage.
+/// Handles saving, loading, and deleting game data for WebGL and other platforms.
 /// </summary>
 public class SaveSystem
 {
-    private static string saveFilePath = Application.persistentDataPath + "/saveData.json";
+    private const string saveKey = "GameSaveData"; 
 
     /// <summary>
-    /// Loads the saved game data from the JSON file. 
-    /// Returns a `SaveData` object if the file exists; otherwise, returns null.
+    /// Loads the saved game data from PlayerPrefs.
     /// </summary>
     public static SaveData LoadGame()
     {
-        if (File.Exists(saveFilePath))
+        if (PlayerPrefs.HasKey(saveKey))
         {
-            string json = File.ReadAllText(saveFilePath);
+            string json = PlayerPrefs.GetString(saveKey);
             return JsonUtility.FromJson<SaveData>(json);
         }
         else
         {
-            return null; 
+            return null;
         }
     }
 
     /// <summary>
-    /// Saves the provided game data to a JSON file, overwriting any existing save file.
+    /// Saves the provided game data as a JSON string in PlayerPrefs.
     /// </summary>
-    /// <param name="data">The `SaveData` object containing the game state to be saved.</param>
+    /// <param name="data">The game state to save.</param>
     public static void SaveGame(SaveData data)
     {
         string json = JsonUtility.ToJson(data, true);
-        File.WriteAllText(saveFilePath, json);
+        PlayerPrefs.SetString(saveKey, json);
+        PlayerPrefs.Save(); 
     }
 
     /// <summary>
-    /// Deletes the existing save file, effectively resetting the saved game state.
+    /// Deletes the saved game data from PlayerPrefs.
     /// </summary>
     public static void DeleteSaveData()
     {
-        if (File.Exists(saveFilePath))
+        if (PlayerPrefs.HasKey(saveKey))
         {
-            File.Delete(saveFilePath);
+            PlayerPrefs.DeleteKey(saveKey);
         }
     }
 }

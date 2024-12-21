@@ -2387,14 +2387,14 @@ MonoBehaviour:
   - objectPrefab: {fileID: 8209718981315593907, guid: bb673f9275595c642b87723c10e7907a, type: 3}
     spawnChance: 30
   minObjects: 0
-  maxObjects: 10
+  maxObjects: 6
   possibleEnemies:
   - objectPrefab: {fileID: 2665638557316323189, guid: 2ba8ae12d7c9c9d4da1f55f65dbdd053, type: 3}
     spawnChance: 50
   - objectPrefab: {fileID: 6700581612938788971, guid: 3fb85a22aaca4264bbed06a87a4c8bbc, type: 3}
     spawnChance: 50
   minEnemies: 1
-  maxEnemies: 8
+  maxEnemies: 5
 --- !u!1 &1382141904271332457
 GameObject:
   m_ObjectHideFlags: 0

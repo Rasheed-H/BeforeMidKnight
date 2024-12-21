@@ -92,7 +92,8 @@ public class MainMenuController : MonoBehaviour
     /// </summary>
     public void OnQuitButtonClicked()
     {
-        Application.Quit();
+        //Application.Quit();
+        Application.ExternalEval("location.reload();");
     }
 
     public void PlayButtonClickSound() 

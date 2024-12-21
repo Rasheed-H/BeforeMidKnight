@@ -1,19 +1,15 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
-using static DbManager;
+using System.Linq;
 
-/// <summary>
-/// Manages the Scores/Stats UI, including displaying score entries, aggregated statistics,
-/// and handling tab navigation between Scores and Stats views.
-/// </summary>
 public class ScoresStatsController : MonoBehaviour
 {
     public GameObject runEntryPrefab;
     public Transform contentPanel;
     public GameObject ScoreUI;
     public GameObject StatsUI;
-    public GameObject scoreStatsUI; 
+    public GameObject scoreStatsUI;
 
     public TMP_Text highscoreText;
     public TMP_Text recordsText;
@@ -29,69 +25,79 @@ public class ScoresStatsController : MonoBehaviour
     /// </summary>
     public void OnScoresStatsButtonClicked()
     {
-        scoreStatsUI.SetActive(true); 
-        DisplayScores(); 
+        scoreStatsUI.SetActive(true);
+        DisplayScores();
         DisplayStats();
-        OnScoresTabClicked(); 
+        OnScoresTabClicked();
     }
 
     /// <summary>
-    /// Populates the scores list with entries from the database.
+    /// Populates the scores list with entries from the server.
     /// </summary>
     public void DisplayScores()
     {
-
+        
         foreach (Transform child in contentPanel)
         {
             Destroy(child.gameObject);
         }
 
-
-        List<RunData> runs = DbManager.Instance.GetAllRuns();
-
-        foreach (RunData run in runs)
+        DbManager.Instance.GetRuns(runs =>
         {
-            GameObject newEntry = Instantiate(runEntryPrefab, contentPanel);
+            var i = runs.Count+1;
+            foreach (var run in runs)
+            {
+                
+                GameObject newEntry = Instantiate(runEntryPrefab, contentPanel);
 
-            TMP_Text idText = newEntry.transform.Find("IDContainer/IDText").GetComponent<TMP_Text>();
-            TMP_Text weekText = newEntry.transform.Find("RunContainer/WeekText").GetComponent<TMP_Text>();
-            TMP_Text scoreText = newEntry.transform.Find("RunContainer/ScoreText").GetComponent<TMP_Text>();
-            TMP_Text statsText = newEntry.transform.Find("RunContainer/StatsText").GetComponent<TMP_Text>();
-            TMP_Text coinsText = newEntry.transform.Find("RunContainer/CoinsText").GetComponent<TMP_Text>();
-            TMP_Text dateText = newEntry.transform.Find("RunContainer/DateText").GetComponent<TMP_Text>();
-
-            idText.text = $"{run.Id}";
-            weekText.text = $"Week: {run.Week}";
-            scoreText.text = $"{run.Score}";
-            statsText.text = $"Escapes: {run.Escapes}\nDeaths: {run.Deaths}\nKills: {run.Kills}";
-            coinsText.text = $"x {run.TotalCoinsDeposited}";
-            dateText.text = System.DateTime.Parse(run.Date).ToString("MM/dd/yyyy");
-        }
+                TMP_Text idText = newEntry.transform.Find("IDContainer/IDText").GetComponent<TMP_Text>();
+                TMP_Text weekText = newEntry.transform.Find("RunContainer/WeekText").GetComponent<TMP_Text>();
+                TMP_Text scoreText = newEntry.transform.Find("RunContainer/ScoreText").GetComponent<TMP_Text>();
+                TMP_Text statsText = newEntry.transform.Find("RunContainer/StatsText").GetComponent<TMP_Text>();
+                TMP_Text coinsText = newEntry.transform.Find("RunContainer/CoinsText").GetComponent<TMP_Text>();
+                TMP_Text dateText = newEntry.transform.Find("RunContainer/DateText").GetComponent<TMP_Text>();
+                
+                i--;
+                idText.text = $"{i}";
+                weekText.text = $"Week: {run.week}";
+                scoreText.text = $"{run.score}";
+                statsText.text = $"Escapes: {run.escapes}\nDeaths: {run.deaths}\nKills: {run.kills}";
+                coinsText.text = $"x {run.total_coins_deposited}";
+                dateText.text = System.DateTime.Parse(run.date).ToString("MM/dd/yyyy");
+            }
+        });
     }
 
     /// <summary>
-    /// Populates the stats display with aggregated statistics from the database.
+    /// Populates the stats display with aggregated statistics from the server.
     /// </summary>
     public void DisplayStats()
     {
+        DbManager.Instance.GetStats(stats =>
+        {
+            if (stats == null)
+            {
+                Debug.LogError("Invalid stats data received.");
+                return;
+            }
 
-        var stats = DbManager.Instance.GetStats();
+            highscoreText.text = $"{stats.highest_score}";
+            recordsText.text = $"Highest Week: {stats.highest_week}\n" +
+                               $"Total Days: {stats.total_days}\n" +
+                               $"Escapes: {stats.total_escapes}\n" +
+                               $"Deaths: {stats.total_deaths}\n" +
+                               $"Coins Deposited: {stats.total_coins_deposited}\n" +
+                               $"Coins Lost: {stats.total_coins_lost}";
 
-        highscoreText.text = $"{stats.HighestScore}";
-        recordsText.text = $"Highest Week: {stats.HighestWeek}\n" +
-                           $"Total Days: {stats.TotalDays}\n" +
-                           $"Escapes: {stats.TotalEscapes}\n" +
-                           $"Deaths: {stats.TotalDeaths}\n" +
-                           $"Coins Deposited: {stats.TotalCoinsDeposited}\n" +
-                           $"Coins Lost: {stats.TotalCoinsLost}";
-
-        totalKillsText.text = $"Total: {stats.TotalKills}";
-        goblinKillsText.text = $"x{stats.TotalGoblinKills}";
-        skeletonKillsText.text = $"x{stats.TotalSkeletonKills}";
-        ghastKillsText.text = $"x{stats.TotalGhastKills}";
-        wizardKillsText.text = $"x{stats.TotalWizardKills}";
-        demonKillsText.text = $"x{stats.TotalDemonKills}";
+            totalKillsText.text = $"Total: {stats.total_kills}";
+            goblinKillsText.text = $"x{stats.total_goblin_kills}";
+            skeletonKillsText.text = $"x{stats.total_skeleton_kills}";
+            ghastKillsText.text = $"x{stats.total_ghast_kills}";
+            wizardKillsText.text = $"x{stats.total_wizard_kills}";
+            demonKillsText.text = $"x{stats.total_demon_kills}";
+        });
     }
+
 
     /// <summary>
     /// Shows the Score UI and hides the Stats UI.

@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Better Dagger
   itemSprite: {fileID: 21300000, guid: 9e8af0a7052180548abbf15d07c464db, type: 3}
-  itemDescription: +15 Dagger Damage\n\n-1 Dagger Cooldown
+  itemDescription: +15 Dagger Damage\n\n-0.5 Dagger Cooldown
   itemPrice: 80
   itemRarity: common
   statModifiers:
   - statName: daggerDamage
     value: 15
   - statName: daggerCooldown
-    value: -1
+    value: -0.5
   specialEffects: []

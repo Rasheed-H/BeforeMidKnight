@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2462760018287920877
+--- !u!1 &1624051618143672759
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8522261111178637130}
-  - component: {fileID: 8042000902381218758}
+  - component: {fileID: 5175567415140121639}
+  - component: {fileID: 4778661017562250235}
   m_Layer: 12
-  m_Name: Hitbox
+  m_Name: HitBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8522261111178637130
+--- !u!4 &5175567415140121639
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2462760018287920877}
+  m_GameObject: {fileID: 1624051618143672759}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,13 +32,13 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1781736485656016003}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!70 &8042000902381218758
+--- !u!70 &4778661017562250235
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2462760018287920877}
+  m_GameObject: {fileID: 1624051618143672759}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
@@ -64,8 +64,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.004121363, y: -0.11127648}
-  m_Size: {x: 0.59066975, y: 0.77744704}
+  m_Offset: {x: 0, y: -0.12242362}
+  m_Size: {x: 0.64216936, y: 0.707763}
   m_Direction: 0
 --- !u!1 &6700581612938788971
 GameObject:
@@ -102,7 +102,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 63149431428972813}
-  - {fileID: 8522261111178637130}
+  - {fileID: 5175567415140121639}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8309948153796834184
@@ -262,7 +262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34650734e0d25d4ca10f02755a96128, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 16
+  speed: 12
   damage: 1
   maxHealth: 15
   activationParticlePrefab: {fileID: 1546897667432260974, guid: 9b36c7948438463469d1fb33b246f6eb, type: 3}
@@ -290,7 +290,7 @@ MonoBehaviour:
   fleeCooldown: 8
   arrowPrefab: {fileID: 7304834097810667245, guid: fcc97523aac7f0d458716e2ac4416b84, type: 3}
   arrowSpawnPoint: {fileID: 63149431428972813}
-  fireRate: 1.5
+  fireRate: 0.4
 --- !u!1 &7084458343584066423
 GameObject:
   m_ObjectHideFlags: 0
